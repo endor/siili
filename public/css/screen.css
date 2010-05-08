@@ -1,0 +1,24 @@
+#go {
+  width: 300px;
+  height: 300px;
+  padding: 0px;
+}
+
+.field {
+  width: 33.33px;
+  height: 33.33px;
+  background-image: url(../images/cross.png);
+  display: block;
+  float: left;
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+}
+
+.field:hover {
+  background-image: url(../images/cross_hover.png);
+}
+
+footer {
+  clear: both;
+}
