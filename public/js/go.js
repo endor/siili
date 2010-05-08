@@ -1,23 +1,31 @@
 var go = $.sammy('#go', function() {
-  var size = 9, element_selector;
+  this.store = new Sammy.Store({name: 'go.js', type: ['local', 'cookie']});
+  this.helpers(exports.GoHelpers);
   
   this.get('#/', function(context) {
-    element_selector = go.element_selector;
-    // either get game
-    // or draw new one
-    new_game(context);
+    context.current_game = go.store.get('current_game');
+    context.size_of_field = 9;
+
+    if(context.current_game) {
+      Game.show(context, function(game) {
+        $('h1').html('go.js - ' + game.id);
+      });
+    } else {
+      Game.create(context, function(game) {
+        context.current_game = game.id;
+        go.store.set('current_game', context.current_game);
+        $('h1').html('go.js - ' + game.id);
+      });
+    }
   });
   
-  function new_game(context) {
-    // register new game
-    
-    // and draw field
-    for(i = 1; i <= size; i++) {
-      for(j = 1; j <= size; j++) {
-        $(element_selector).append('<div id="' + i + '_' + j + '" class="field"></div>');
-      }
-    }
-  };
+  this.get('#/games/new', function(context) {
+    $('#go').html('');
+    go.store.clear('current_game');
+    context.current_game = null;
+    context.redirect('#/');
+  });
+  
   
   // this.get('#/projects', function(context) {
   //   if(context.params['accounts']) {

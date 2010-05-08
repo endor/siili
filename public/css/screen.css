@@ -19,6 +19,14 @@
   background-image: url(../images/cross_hover.png);
 }
 
+.field.black {
+  background-image: url(../images/black.png);
+}
+
+.field.white {
+  background-image: url(../images/white.png);
+}
+
 footer {
   clear: both;
 }

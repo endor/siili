@@ -2,22 +2,38 @@ var sys = require('sys'),
   go_server = require('../../lib/go_server').go_server,
   assert = require('assert');
   
-(function test_projects() {
+(function test_new_game() {
   var response = stub_response();
-  var client = stub_client('projects', ['[{"project":{"name":', '"project1"}}]'], ['[{"project":{"name":', '"project2"}},{"project":{"name":', '"project3"}}]']);
   
-  mite_server(client)({url: '/projects?accounts[]=upstream|12345&accounts[]=kriesse|65762'}, response);
+  go_server()({url: '/games/new?size_of_field=9'}, response);
 
-  assert.deepEqual(response.data,
-    '[{"name":"project1","subdomain":"upstream","api_key":"12345"},{"name":"project2","subdomain":"kriesse","api_key":"65762"},{"name":"project3","subdomain":"kriesse","api_key":"65762"}]');
+  data = JSON.parse(response.data);
+  assert.ok(data.id.toString().match(/\d{8}/));
+  assert.ok(data.player.toString().match(/\d{8}/));
+  assert.ok(data.player != data.id);
   assert.equal(response.headers["Content-Type"], 'application/json');
-  assert.equal(response.headers["Content-Length"], 182);
   assert.equal(response.status, 200);
   assert.ok(response.closed);
-  
-  assert.deepEqual(client.subdomains, ['upstream', 'kriesse']);
-  assert.deepEqual(client.api_keys, ['12345', '65762']);
 })();
+
+(function test_show_game() {
+  var response = stub_response();
+  var server = go_server();
+  
+  server({url: '/games/new?size_of_field=9'}, response);
+  
+  var id = JSON.parse(response.data).id;
+  var response = stub_response();
+  server({url: '/games/show?id=' + id}, response);
+
+  data = JSON.parse(response.data);
+  assert.equal(data.id, id);
+  assert.equal(data.board[1][1], 0);
+  assert.equal(response.headers["Content-Type"], 'application/json');
+  assert.equal(response.status, 200);
+  assert.ok(response.closed);
+})();
+
 
 
 function stub_response() {
