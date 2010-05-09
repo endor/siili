@@ -17,21 +17,51 @@ var sys = require('sys'),
 })();
 
 (function test_show_game() {
-  var response = stub_response();
   var server = go_server();
   
+  var response = stub_response();
   server({url: '/games/new?size_of_field=9'}, response);
   
   var id = JSON.parse(response.data).id;
-  var response = stub_response();
+  response = stub_response();
   server({url: '/games/show?id=' + id}, response);
 
-  data = JSON.parse(response.data);
+  var data = JSON.parse(response.data);
   assert.equal(data.id, id);
   assert.equal(data.board[1][1], 0);
-  assert.equal(response.headers["Content-Type"], 'application/json');
   assert.equal(response.status, 200);
-  assert.ok(response.closed);
+  
+  response = stub_response();
+  server({url: '/games/show?id=' + 123}, response);
+
+  var data = JSON.parse(response.data);
+  assert.equal(data.message, 'Game does not exist.');
+  assert.equal(response.status, 404);  
+})();
+
+(function test_join_game() {
+  var server, data, id, response;
+  
+  server = go_server();
+  
+  response = stub_response();
+  server({url: '/games/new?size_of_field=9'}, response);
+  
+  id = JSON.parse(response.data).id;
+  response = stub_response();
+  server({url: '/games/join?id=' + id}, response);
+  
+  data = JSON.parse(response.data);
+  assert.ok(data.player.toString().match(/\d{8}/));
+  assert.equal(data.id, id);
+  assert.equal(response.status, 200);
+  
+  response = stub_response();
+  server({url: '/games/join?id=' + id}, response);
+  
+  data = JSON.parse(response.data);
+  assert.equal(data.message, 'Game already has two players.');
+  assert.equal(response.status, 403);  
 })();
 
 

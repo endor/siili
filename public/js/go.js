@@ -12,9 +12,7 @@ var go = $.sammy('#go', function() {
       });
     } else {
       Game.create(context, function(game) {
-        context.current_game = game.id;
-        go.store.set('current_game', context.current_game);
-        $('h1').html('go.js - ' + game.id);
+        context.join_game(context, game.id);
       });
     }
   });
@@ -26,24 +24,12 @@ var go = $.sammy('#go', function() {
     context.redirect('#/');
   });
   
-  
-  // this.get('#/projects', function(context) {
-  //   if(context.params['accounts']) {
-  //     $.get('/projects', {accounts: context.params['accounts']},
-  //       function(projects) {
-  //         context.projects = projects.map(function(project) {
-  //           return {id: project['id'], api_key: project['api_key'],
-  //             subdomain: project['subdomain'], name: project['name']};
-  //         });
-  //         context.partial('templates/projects/index.ms', function(html) {
-  //           $('#projects').html(html);
-  //         });
-  //       }
-  //     );
-  //   } else {
-  //     context.flash('You did not choose any accounts.');
-  //   };
-  // });
+  this.get('#/games/join', function(context) {
+    var id = $('.join_game_id').val();
+    Game.participate(context, id, function(game_id, player_id) {
+      context.join_game(context, game_id);
+    });
+  });
 });
 
 $(function() {

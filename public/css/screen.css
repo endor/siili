@@ -1,3 +1,7 @@
+#wrapper {
+  margin: 15px;
+}
+
 #go {
   width: 300px;
   height: 300px;
@@ -27,6 +31,21 @@
   background-image: url(../images/white.png);
 }
 
-footer {
-  clear: both;
+form {
+  display: inline;
+}
+
+#flash {
+  display: none;
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  padding: 1em;
+  font-weight: normal;
+  color: #FFF;
+  background-color: #444;
+  background-color: rgba(0,0,0,0.7);
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
 }
