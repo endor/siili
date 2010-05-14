@@ -16,12 +16,12 @@ get('/', function() {
   this.sendfile(__dirname + '/public/index.html')
 })
 
-post('/users', function(){
+post('/users', function() {
   var name = this.params.post.user
   var password = this.params.post.password
   var user = User.find_by_name(name)
-  
-  if(user && user.password == password) {
+  sys.puts(name, password, user)
+  if(user) {
     this.respond(400, 'User already registered.')
   } else {
     User.save({name: name, password: password})
@@ -29,6 +29,19 @@ post('/users', function(){
   }
   // this.contentType('json')
   // this.halt(200, JSON.stringify({}))
+})
+
+post('/sessions', function() {
+  var name = this.params.post.user
+  var password = this.params.post.password
+  var user = User.find_by_name(name)
+  sys.puts(name, password, user)
+  
+  if(user && user.password == password) {
+    this.respond(200)
+  } else {
+    this.respond(400, 'Wrong user/password.')
+  }
 })
 
 run()

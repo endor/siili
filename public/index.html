@@ -42,24 +42,25 @@
             <table>
               <tr>
                 <td><label for="user">User</label></td>
-                <td><input type="text" id="user" name="user" /></td>
+                <td><input type="text" class="user" name="user" /></td>
               </tr>
 
               <tr>
                 <td><label for="password">Password</label></td>
-                <td><input type="password" id="password" name="password" /></td>
+                <td><input type="password" class="password" name="password" /></td>
               </tr>            
             </table>
 
-            <input type="submit" value="Login" />
+            <input type="submit" value="Login" class="login" />
+            
+            <div class="error"></div>
           </form>          
         </div>
       </div>
       
       <nav>
         <ul>
-          <li>ABC</li>
-          <li>DEF</li>
+          <li><a href="#" class="logout">Logout</a></li>
         </ul>
       </nav>
       
@@ -70,6 +71,7 @@
         </p>
       </footer>
     </div>
+    <script type="text/javascript" src="/public/javascripts/store.js"></script>
     <script type="text/javascript" src="/public/javascripts/app.js"></script>
     <script type="text/javascript" src="/public/javascripts/user.js"></script>
   </body>

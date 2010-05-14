@@ -101,7 +101,7 @@ form {
 .register_form {
   border-right: 1px solid #AAAAAA;
 }
-.register_form .error {
+.error {
   display: none;
   color: red;
   margin-top: 10px;

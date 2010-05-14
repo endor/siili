@@ -4,7 +4,11 @@ $(function() {
     $('#facebox_overlay').unbind('click')
   })
   
-  $.facebox($('#login').html())
-  $('#login').remove()
-  $('nav').show()
+  store = new Store();
+  
+  if(store.exists('user')) {
+    $('nav').show()
+  } else {
+    $.facebox($('#login').html())
+  }  
 })
