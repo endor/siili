@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <title>go.js</title>
-    <link rel="stylesheet" href="./css/screen.css" type="text/css" />
+    <link rel="stylesheet" href="/public/css/screen.css" type="text/css" />
+    <link rel="stylesheet" href="/public/css/facebox.css" type="text/css" />
+    <script type="text/javascript" src="/public/javascripts/jquery.js"></script>
+    <script type="text/javascript" src="/public/javascripts/jquery.facebox.js"></script>
   </head>
   
   <body>
@@ -13,15 +16,50 @@
       <div id="go"></div>    
       <div id="flash"></div>
       
-      <br style="clear:both;" />
+      <div id="login">
+        <div class="register_form">
+          <form method="POST" action="/users">
+            <table>
+              <tr>
+                <td><label for="user">User</label></td>
+                <td><input type="text" class="user" name="user" /></td>
+              </tr>
+
+              <tr>
+                <td><label for="password">Password</label></td>
+                <td><input type="password" class="password" name="password" /></td>
+              </tr>            
+            </table>
+
+            <input type="submit" value="Register" class="register" />          
+
+            <div class="error"></div>
+          </form>          
+        </div>
+        
+        <div class="login_form">
+          <form method="POST" action="#/sessions">
+            <table>
+              <tr>
+                <td><label for="user">User</label></td>
+                <td><input type="text" id="user" name="user" /></td>
+              </tr>
+
+              <tr>
+                <td><label for="password">Password</label></td>
+                <td><input type="password" id="password" name="password" /></td>
+              </tr>            
+            </table>
+
+            <input type="submit" value="Login" />
+          </form>          
+        </div>
+      </div>
       
       <nav>
         <ul>
-          <li><a href="#/games/new">New Game</a></li>
-          <li>
-            ID: <input type="text" name="id" class="join_game_id" />
-            <a href="#/games/join">Join Game</a>
-          </li>
+          <li>ABC</li>
+          <li>DEF</li>
         </ul>
       </nav>
       
@@ -32,15 +70,7 @@
         </p>
       </footer>
     </div>
-    
-    <script type="text/javascript">
-      var exports = {};
-    </script>
-    <script type="text/javascript" src="./js/jquery.js"></script>
-    <script type="text/javascript" src="./js/sammy.js"></script>
-    <script type="text/javascript" src="./js/sammy.storage.js"></script>
-    <script type="text/javascript" src="./js/helpers.js"></script>
-    <script type="text/javascript" src="./js/go.js"></script>
-    <script type="text/javascript" src="./js/game.js"></script>
+    <script type="text/javascript" src="/public/javascripts/app.js"></script>
+    <script type="text/javascript" src="/public/javascripts/user.js"></script>
   </body>
 </html>

@@ -1,0 +1,75 @@
+#facebox {
+  position: absolute;
+  top: 30px;
+  left: 20%;
+  width: 500px;
+  z-index: 100;
+  text-align: left;
+  padding: 2em;
+  background: #FFF;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  border: 1px solid #999;
+  -moz-box-shadow: 0px 0px 10px #888;
+  -webkit-box-shadow: 0px 0px 10px #888;  
+  box-shadow: 0px 0px 10px #888;
+}
+
+#facebox.graph {
+  left: 8em !important;
+}
+
+.facebox_div {
+  display: none;
+}
+
+.facebox_buttons form {
+  display: inline;
+}
+
+#facebox .content {
+  text-align: center;
+}
+
+#facebox .loading {
+  text-align: center;
+}
+
+#facebox .footer {
+  border-top: 1px solid #DDDDDD;
+  padding-top: 5px;
+  margin-top: 10px;
+  text-align: right;
+}
+
+#facebox .footer img {
+  vertical-align: middle;
+}
+
+#facebox h1 {
+  color: #999999;
+  font-size: 20px;
+}
+
+#facebox_overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+.facebox_hide {
+  z-index:-100;
+}
+
+.facebox_overlayBG {
+  background-color: #000;
+  z-index: 99;
+}
+
+* html #facebox_overlay { /* ie6 hack */
+  position: absolute;
+  height: expression(document.body.scrollHeight > document.body.offsetHeight ? document.body.scrollHeight : document.body.offsetHeight + 'px');
+}

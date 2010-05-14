@@ -1,5 +1,49 @@
+body {
+  background-color: #458B00;
+  color: #666666;
+}
+
 #wrapper {
-  margin: 15px;
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  right: 5px;
+  left: 5px;
+  padding: 10px;
+  background-color: white;
+}
+
+nav {
+  position: absolute;
+  top: 0px;
+  right: 15px;
+  display: none;
+}
+
+nav ul {
+  list-style-type: none;
+}
+
+nav ul li {
+  display: inline;
+  margin-left: 10px;
+}
+
+footer {
+  position: absolute;
+  bottom: 0px;
+  left: 15px;
+}
+
+a {
+  color: #333333;
+}
+
+h1 {
+  position: absolute;
+  top: 0px;
+  left: 15px;
+  color: #CCCCCC;
 }
 
 #go {
@@ -48,4 +92,30 @@ form {
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   border-radius: 6px;
+}
+
+#login {
+  display: none;
+}
+
+.register_form {
+  border-right: 1px solid #AAAAAA;
+}
+.register_form .error {
+  display: none;
+  color: red;
+  margin-top: 10px;
+}
+.login_form {
+  margin-left: 10px;
+}
+.login_form, .register_form {
+  float: left;
+  width: 240px;
+}
+.login_form table, .register_form table {
+  margin-bottom: 15px;
+}
+.login_form td, .register_form td {
+  text-align: left;
 }
