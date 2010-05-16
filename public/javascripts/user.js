@@ -15,29 +15,21 @@ $(function() {
   }
   
   function login(data) {
-    $.ajax({
-      url: '/sessions',
-      type: 'POST',
-      data: data,
-      success: function() {
-        close_facebox()
-        store.set('user', user_data().user)
-        $('nav').show()
-      },
-      error: function(error) { display_error(error, 'login_form') }
+    post('/sessions', data, function() {
+      close_facebox()
+      store.set('user', user_data().user)
+      $('nav').show()
+    }, function(error) {
+      display_error(error, 'login_form')
     })
   }
   
   $('.register').click(function() {
     var data = user_data('register_form')
-    $.ajax({
-      url: '/users',
-      type: 'POST',
-      data: data,
-      success: function() {
-        login(data)
-      },
-      error: function(error) { display_error(error, 'register_form') }
+    post('/users', data, function() {
+      login(data)
+    }, function(error) {
+      display_error(error, 'register_form')
     })
     return false
   })
