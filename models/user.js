@@ -1,29 +1,31 @@
-UserService = function(){};
-UserService.prototype.data = [];
+var sys = require('sys')
 
-UserService.prototype.find_by_name = function(name, callback) {
-  var result = null;
-  for(var i = 0; i < this.data.length; i++) {
-    if(this.data[i].name == name) {
-      result = this.data[i];
-      break;
+UserService = function() {}
+UserService.prototype.data = []
+
+var define_find_by = function(attribute) {
+  UserService.prototype['find_by_' + attribute] = function(attr) {
+    var result = null
+    for(var i = 0; i < this.data.length; i++) {
+      if(this.data[i][attribute] == attr) {
+        result = this.data[i]
+        break
+      }
     }
-  }
-  if(callback) {
-    callback(null, result);
-  } else {
-    return result;
-  }
-};
+    return result    
+  }  
+}
+define_find_by('name')
+define_find_by('identifier')
 
-UserService.prototype.save = function(user, callback) {
-  this.data[this.data.length] = user;
+UserService.prototype.build_id = function() {
+  return new Date().getTime()
+}
 
-  if(callback) {
-    callback(null, users);
-  } else {
-    return true;
-  }
-};
+UserService.prototype.save = function(user) {
+  user.identifier = this.build_id()
+  this.data[this.data.length] = user
+  return true
+}
 
-exports.UserService = UserService;
+exports.UserService = UserService

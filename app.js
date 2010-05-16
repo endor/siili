@@ -27,10 +27,9 @@ post('/users', function() {
     this.respond(400, 'User already registered.')
   } else {
     User.save({name: name, password: password})
-    this.respond(200)
+    
+    this.respond(200, JSON.stringify(user))
   }
-  // this.contentType('json')
-  // this.halt(200, JSON.stringify({}))
 })
 
 post('/sessions', function() {
@@ -39,16 +38,25 @@ post('/sessions', function() {
   var user = User.find_by_name(name)
   
   if(user && user.password == password) {
-    this.respond(200)
+    this.contentType('json')
+    this.respond(200, JSON.stringify(user))
   } else {
     this.respond(400, 'Wrong user/password.')
   }
 })
 
 post('/games', function() {
-  var game = Game.save({board_size: this.params.post.board_size})
-  this.contentType('json')
-  this.respond(200, JSON.stringify(game))
+  if(this.params.post.user) {
+    var user = User.find_by_identifier(this.params.post.user)
+    var game = Game.save({board_size: this.params.post.board_size, white: user})
+
+    if(game && user) {
+      this.contentType('json')
+      this.respond(200, JSON.stringify(game))    
+    }
+  }
+  
+  this.respond(400, 'Game could not be created.')
 })
 
 run()

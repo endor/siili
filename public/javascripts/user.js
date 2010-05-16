@@ -15,9 +15,9 @@ $(function() {
   }
   
   function login(data) {
-    post('/sessions', data, function() {
+    post('/sessions', data, function(user) {
       close_facebox()
-      store.set('user', user_data().user)
+      store.set('user', user.identifier)
       $('nav').show()
     }, function(error) {
       display_error(error, 'login_form')

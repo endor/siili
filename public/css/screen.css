@@ -7,7 +7,7 @@ body {
   position: absolute;
   top: 5px;
   bottom: 5px;
-  right: 5px;
+  width: 800px;
   left: 5px;
   padding: 10px;
   background-color: white;
@@ -19,7 +19,7 @@ body {
 nav {
   position: absolute;
   top: 0px;
-  right: 15px;
+  left: 600px;
   display: none;
 }
 
@@ -52,11 +52,19 @@ h1 {
 
 #go {
   position: absolute;
-  top: 50px;
-  left: 150px;
+  top: 90px;
+  left: 160px;
   width: 300px;
   height: 300px;
   padding: 0px;
+}
+
+#info {
+  position: absolute;
+  top: 70px;
+  left: 20px;
+  padding: 0px;
+  margin: 0px;
 }
 
 .field {

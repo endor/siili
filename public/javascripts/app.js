@@ -4,6 +4,10 @@ $(function() {
   }
   
   post = function(url, data, success, error) {
+    if(store.exists('user')) {
+      $.extend(data, {user: store.get('user')})
+    }
+    
     $.ajax({
       url: url,
       type: 'POST',

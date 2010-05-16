@@ -1,6 +1,10 @@
 GameService = function() {}
 GameService.prototype.data = []
 
+GameService.prototype.build_id = function() {
+  return new Date().getTime()
+}
+
 GameService.prototype.build_board = function(board_size) {
   var board = {}
   
@@ -16,6 +20,7 @@ GameService.prototype.build_board = function(board_size) {
 
 GameService.prototype.save = function(game) {
   game.board = this.build_board(game.board_size)
+  game.identifier = this.build_id()
   
   this.data[this.data.length] = game
   return game
