@@ -81,6 +81,7 @@ put('/games/:id', function() {
 get('/games', function() {
   if(this.params.get.user) {
     user = User.find_by_identifier(this.params.get.user)
+    // TODO: this should be user.games
     games = Game.find_all(user)
     
     if(games && user) {
