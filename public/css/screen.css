@@ -98,7 +98,7 @@ form {
   display: none;
   position: fixed;
   bottom: 1em;
-  right: 1em;
+  left: 600px;
   padding: 1em;
   font-weight: normal;
   color: #FFF;
