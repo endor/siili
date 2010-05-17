@@ -7,7 +7,7 @@ $(function() {
   }
   
   function display_error(error, form) {
-    $('#facebox .' + form + ' .error').html(error.responseText).show()
+    $('#facebox .' + form).append('<div class="error">' + error.responseText + '</div>')
   }
   
   function close_facebox() {

@@ -6,6 +6,7 @@ var UserService = require('./models/user').UserService;
 var GameService = require('./models/game').GameService;
 
 configure(function() {
+  use(MethodOverride)
   use(Logger)
   use(Static)
   set('root', __dirname)
@@ -57,6 +58,24 @@ post('/games', function() {
   }
   
   this.respond(400, 'Game could not be created.')
+})
+
+put('/games/:id', function() {
+  if(this.params.post.user) {
+    var user = User.find_by_identifier(this.params.post.user)
+    var game = Game.find_by_identifier(this.params.path.id)
+
+    if(game && user) {
+      if(game.participate(user)) {
+        this.contentType('json')
+        this.respond(200, JSON.stringify(game))
+      } else {
+        this.respond(400, 'You cannot join your own game.')
+      }
+    }
+  }
+  
+  this.respond(400, 'Game could not be joined.')
 })
 
 run()

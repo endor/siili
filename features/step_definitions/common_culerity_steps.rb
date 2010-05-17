@@ -163,7 +163,7 @@ def open_response_in_browser
   tmp_file = '/tmp/culerity_results.html'
   FileUtils.rm_f tmp_file
   File.open(tmp_file, 'w') do |f|
-    f << $browser.div(:id, 'container').html
+    f << $browser.div(:id, 'wrapper').html
   end
   `open #{tmp_file}`
 end

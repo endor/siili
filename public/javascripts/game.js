@@ -6,20 +6,47 @@ $(function() {
         for(col in data[row]) {
           if(col.match(/\d+/)) {
             id = row + '_' + col
-            $('#go').append('<div class="field" id="' + id + '"></div>')
+            $('#go').append('<div class="field empty" id="' + id + '"></div>')
           }
         }
       }
     }
   }
   
+  var set_info = function(game) {
+    $('#info').html('<h2>Players</h2><ul class="players"><li>' + game.white.name + '</li></ul>')
+    if(game.black) {
+      $('#info .players').append('<li>' + game.black.name + '</li>')
+    }
+  }
+  
+  var display_game = function(game) {
+    build_board(game.board)
+    $('h1').html('siili - ' + game.identifier)
+    set_info(game)
+  }
+  
   $('.new_game').click(function() {
     post('/games', {board_size: 9}, function(game) {
-      build_board(game.board)
-      $('h1').html('go.js - ' + game.identifier)
-      $('#info').html('<h2>Players</h2><ul><li>' + game.white.name + '</li></ul>')
-    }, function() {
-      flash('Game could not be created.')
+      display_game(game)
+    }, function(error) {
+      flash(error.responseText)
+    })
+    return false
+  })
+  
+  $('a.join_game').live('click', function() {
+    $.facebox($('#join').html())
+    return false
+  })
+  
+  $('input.join_game').live('click' ,function() {
+    var game_id = $('#facebox .game').val()
+    put('/games/' + game_id, {}, function(game) {
+      $(document).trigger('close.facebox')
+      display_game(game)
+    }, function(error) {
+      $('#facebox form').append('<div class="error">' + error.responseText + '</div>')
     })
     return false
   })

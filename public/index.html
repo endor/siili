@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>go.js</title>
+    <title>siili</title>
     <link rel="stylesheet" href="/public/css/screen.css" type="text/css" />
     <link rel="stylesheet" href="/public/css/facebox.css" type="text/css" />
     <script type="text/javascript" src="/public/javascripts/jquery.js"></script>
@@ -12,14 +12,14 @@
   
   <body>
     <div id="wrapper">
-      <h1>go.js</h1>
+      <h1>siili</h1>
     
       <div id="go"></div>
       <div id="info"></div>
       <div id="flash"></div>
       
       <div id="login">
-        <div class="register_form">
+        <div class="form">
           <form method="POST" action="/users">
             <table>
               <tr>
@@ -33,13 +33,11 @@
               </tr>            
             </table>
 
-            <input type="submit" value="Register" class="register" />          
-
-            <div class="error"></div>
+            <input type="submit" value="Register" class="register" />
           </form>          
         </div>
         
-        <div class="login_form">
+        <div class="form">
           <form method="POST" action="#/sessions">
             <table>
               <tr>
@@ -54,15 +52,23 @@
             </table>
 
             <input type="submit" value="Login" class="login" />
-            
-            <div class="error"></div>
           </form>          
         </div>
+      </div>
+      <div id="join">
+        <form method="PUT" action="/games">
+          <p>
+            <label for="game">Game:</label>
+            <input type="text" name="game" class="game" />
+          </p>
+          <input type="submit" value="Join" class="join_game" />
+        </form>
       </div>
       
       <nav>
         <ul>
           <li><a href="#" class="new_game">New Game</a></li>
+          <li><a href="#" class="join_game">Join Game</a></li>
           <li><a href="#" class="logout">Logout</a></li>
         </ul>
       </nav>
@@ -70,7 +76,7 @@
       <footer>
         <p>
           Created by Frank Prößdorf at <a href="http://upstre.am">http://upstre.am</a> |
-          <a href="http://github.com/endor/go.js">source code</a>          
+          <a href="http://github.com/endor/siili">source code</a>          
         </p>
       </footer>
     </div>

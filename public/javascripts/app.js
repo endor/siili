@@ -3,23 +3,36 @@ $(function() {
     $('#flash').html(message).show().delay(2000).fadeOut('slow');
   }
   
-  post = function(url, data, success, error) {
-    if(store.exists('user')) {
-      $.extend(data, {user: store.get('user')})
+  var define_route = function(verb) {
+    window[verb] = function(url, data, success, error) {
+      if(store.exists('user')) {
+        $.extend(data, {user: store.get('user')})
+      }
+
+      $.ajax({
+        url: url,
+        type: verb.toUpperCase(),
+        data: data,
+        success: success,
+        error: error
+      })
     }
-    
-    $.ajax({
-      url: url,
-      type: 'POST',
-      data: data,
-      success: success,
-      error: error
-    })
   }
-  
+  define_route('post')
+  define_route('put')
+
+  function show_login_form() {
+    $.facebox($('#login').html())
+    $('#facebox div.form:first').addClass('register_form')
+    $('#facebox div.form:last').addClass('login_form')  
+  }
+
   $(document).bind('reveal.facebox', function() {
-    $('#facebox .footer').remove()
-    $('#facebox_overlay').unbind('click')
+    if($('#facebox #register_user').length > 0) {
+      $('#facebox .footer').remove()
+      $('#facebox_overlay').unbind('click')
+      $(document).unbind('keydown.facebox')
+    }
   })
   
   store = new Store();
@@ -27,6 +40,6 @@ $(function() {
   if(store.exists('user')) {
     $('nav').show()
   } else {
-    $.facebox($('#login').html())
+    show_login_form()
   }  
 })

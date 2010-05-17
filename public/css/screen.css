@@ -19,7 +19,7 @@ body {
 nav {
   position: absolute;
   top: 0px;
-  left: 600px;
+  left: 520px;
   display: none;
 }
 
@@ -113,11 +113,14 @@ form {
   display: none;
 }
 
+#join {
+  display: none;
+}
+
 .register_form {
   border-right: 1px solid #AAAAAA;
 }
 .error {
-  display: none;
   color: red;
   margin-top: 10px;
 }
