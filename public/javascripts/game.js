@@ -24,6 +24,8 @@ $(function() {
     build_board(game.board)
     $('h1').html('siili - ' + game.identifier)
     set_info(game)
+    $('#go').show()
+    $('#games').hide()
   }
   
   $('.new_game').click(function() {
@@ -40,13 +42,28 @@ $(function() {
     return false
   })
   
-  $('input.join_game').live('click' ,function() {
+  $('input.join_game').live('click', function() {
     var game_id = $('#facebox .game').val()
     put('/games/' + game_id, {}, function(game) {
       $(document).trigger('close.facebox')
       display_game(game)
     }, function(error) {
       $('#facebox form').append('<div class="error">' + error.responseText + '</div>')
+    })
+    return false
+  })
+  
+  $('.my_games').live('click', function() {
+    get('/games', {}, function(games) {
+      $('#go').hide()
+      $('#info').hide()
+      $('h1').html('siili')
+      $('#games').html('').show()
+      $.each(JSON.parse(games), function() {
+        $('#games').append('<li class="game">' + this.identifier + '</li>')        
+      })
+    }, function(error) {
+      flash(error.responseText)
     })
     return false
   })

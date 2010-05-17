@@ -2,7 +2,7 @@ Feature: Game
   In order to play
   As a user
   I want create and join games
-  
+    
   Scenario: create a new game
     Given I am logged in as "Hans/Test"
     When I follow "New Game"
@@ -12,6 +12,17 @@ Feature: Game
       And I should see a game id
       And I should see an empty board
   
+  Scenario: see index of games
+    Given a user "Klaus"
+      And a user "Hans"
+      And "Hans" created a game
+      And "Klaus" joined that game
+      And "Klaus" created a game
+    When I log in as "Klaus/Test"
+      And I follow "My Games"
+      And I wait for the AJAX call to finish
+    Then I should see "2" games
+
   Scenario: join a game
     Given a user "Klaus/Test"
       And a user "Hans/Test"
@@ -32,9 +43,3 @@ Feature: Game
     Then I should see "Klaus"
       And I should see "Hans"
       And I should see a game id
-  
-  
-  
-  
-
-  

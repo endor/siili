@@ -1,3 +1,7 @@
+Then /I should see "(\d)" games/ do |number|
+  $browser.ul(:id, 'games').html.split('<li').select{|li| li.match(/class="game"/)}.size.should == number.to_i
+end
+
 Then /I should see a game id/ do
   $browser.h1(:text, /siili - \d+/).should exist
 end
@@ -17,4 +21,20 @@ end
 
 When /I press the join button/ do
   $browser.button(:xpath, "//div[@id='facebox']//input[@class='join_game']").click
+end
+
+Given /"(\w+)" created a game/ do |user|
+  When "I log in as \"#{user}/Test\""
+    And 'I follow "New Game"'
+    And 'I wait for the AJAX call to finish'
+    @game_id = $browser.h1(:text, /siili - \d+/).html.match(/siili - (\d+)/)[1]
+    And 'I follow "Logout"'
+end
+
+Given /"(\w+)" joined that game/ do |user|
+  When "I log in as \"#{user}/Test\""
+    And 'I follow "Join Game"'
+    And 'I fill in the game id'
+    And 'I press the join button'
+    And 'I follow "Logout"'
 end

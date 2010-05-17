@@ -20,6 +20,7 @@ $(function() {
   }
   define_route('post')
   define_route('put')
+  define_route('get')
 
   function show_login_form() {
     $.facebox($('#login').html())

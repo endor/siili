@@ -31,6 +31,18 @@ GameService.prototype.find_by_identifier = function(identifier) {
   return result
 }
 
+GameService.prototype.find_all = function(user) {
+  var result = []
+  for(var i = 0; i < this.data.length; i++) {
+    var game = this.data[i];
+    if((game.white && game.white.identifier == user.identifier) ||
+       (game.black && game.black.identifier == user.identifier)) {
+      result.push(game)
+    }
+  }  
+  return result
+}
+
 GameService.prototype.participate = function(user) {
   if(this.white.identifier == user.identifier) {
     return false 

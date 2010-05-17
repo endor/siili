@@ -33,5 +33,6 @@ at_exit do
   $browser.exit if $browser
   $server.close if $server
   # NOTE: this is dirty, but it does not seem to kill all instances correctly
+  # something's still wrong with the per scenario killing though
   system("for process in `ps x|grep siili|cut -d ' ' -f 1`; do kill -9 $process 2>/dev/null; done")
 end

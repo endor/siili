@@ -78,4 +78,17 @@ put('/games/:id', function() {
   this.respond(400, 'Game could not be joined.')
 })
 
+get('/games', function() {
+  if(this.params.get.user) {
+    user = User.find_by_identifier(this.params.get.user)
+    games = Game.find_all(user)
+    
+    if(games && user) {
+      this.respond(200, JSON.stringify(games))
+    }
+  }
+  
+  this.respond(400, 'You don\'t have any games.')
+})
+
 run()
