@@ -11,14 +11,10 @@ Symbol.class_eval do
 end unless :symbol.respond_to?(:to_proc)
 
 Before do
-  $testapp = IO.popen("cd #{File.dirname(__FILE__) + '/../..'} && /usr/bin/env node app.js", 'r+')
+  $testapp ||= IO.popen("cd #{File.dirname(__FILE__) + '/../..'} && /usr/bin/env node app.js", 'r+')
   $server ||= Culerity::run_server
   $browser = Culerity::RemoteBrowserProxy.new $server, {:browser => :firefox, :javascript_exceptions => true, :resynchronize => false, :status_code_exceptions => true}
   $browser.log_level = :warning
-end
-
-After do
-  Process.kill(9, $testapp.pid.to_i) if $testapp
 end
 
 def host
@@ -34,5 +30,5 @@ at_exit do
   $server.close if $server
   # NOTE: this is dirty, but it does not seem to kill all instances correctly
   # something's still wrong with the per scenario killing though
-  system("for process in `ps x|grep siili|cut -d ' ' -f 1`; do kill -9 $process 2>/dev/null; done")
+  system("for process in `ps x|grep node|cut -d ' ' -f 1`; do kill -9 $process 2>/dev/null; done")
 end

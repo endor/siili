@@ -31,7 +31,7 @@ GameService.prototype.find_by_identifier = function(identifier) {
   return result
 }
 
-GameService.prototype.find_all = function(user) {
+GameService.prototype.find_all_by_user = function(user) {
   var result = []
   for(var i = 0; i < this.data.length; i++) {
     var game = this.data[i];
@@ -52,10 +52,28 @@ GameService.prototype.participate = function(user) {
   }
 }
 
+GameService.prototype.prepare = function(user) {
+  return {
+    board: this.board,
+    identifier: this.identifier,
+    color: user.identifier == this.white.identifier ? 'white' : 'black',
+    white: this.white.name,
+    black: this.black ? this.black.name : null
+  }
+}
+
+GameService.prototype.set_stone = function(user, x, y) {
+  var value = (user.identifier == this.white.identifier) ? 1 : 2
+  this.board[x][y] = value
+  return true
+}
+
 GameService.prototype.save = function(game) {
   game.board = this.build_board(game.board_size)
   game.identifier = this.build_id()
   game.participate = this.participate
+  game.prepare = this.prepare
+  game.set_stone = this.set_stone
   
   this.data[this.data.length] = game
   return game

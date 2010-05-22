@@ -11,6 +11,11 @@ Then /I should see an empty board/ do
   fields.size.should == 81
 end
 
+Then /I should not see an empty board/ do
+  fields = $browser.div(:id, 'go').html.split('div').select{|div| div.match(/class="field empty"/)}
+  fields.size.should_not == 81
+end
+
 When /I look up the game id/ do
   @game_id = $browser.h1(:text, /siili - \d+/).html.match(/siili - (\d+)/)[1]
 end
@@ -21,6 +26,10 @@ end
 
 When /I press the join button/ do
   $browser.button(:xpath, "//div[@id='facebox']//input[@class='join_game']").click
+end
+
+When /^I visit my first game$/ do
+  $browser.li(:xpath, "//ul[@id='games']//a").click
 end
 
 Given /"(\w+)" created a game/ do |user|

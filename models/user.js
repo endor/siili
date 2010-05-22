@@ -24,6 +24,7 @@ UserService.prototype.build_id = function() {
 
 UserService.prototype.save = function(user) {
   user.identifier = this.build_id()
+  
   this.data[this.data.length] = user
   return true
 }

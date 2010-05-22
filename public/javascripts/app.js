@@ -2,6 +2,10 @@ $(function() {
   flash = function(message) {
     $('#flash').html(message).show().delay(2000).fadeOut('slow');
   }
+
+  flash_error = function(error) {
+    flash(error.responseText)
+  }
   
   var define_route = function(verb) {
     window[verb] = function(url, data, success, error) {
