@@ -62,18 +62,12 @@ GameService.prototype.prepare = function(user) {
   }
 }
 
-GameService.prototype.set_stone = function(user, x, y) {
-  var value = (user.identifier == this.white.identifier) ? 1 : 2
-  this.board[x][y] = value
-  return true
-}
-
 GameService.prototype.save = function(game) {
   game.board = this.build_board(game.board_size)
   game.identifier = this.build_id()
   game.participate = this.participate
   game.prepare = this.prepare
-  game.set_stone = this.set_stone
+  game.history = []
   
   this.data[this.data.length] = game
   return game

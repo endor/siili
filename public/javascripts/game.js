@@ -38,6 +38,8 @@ $(function() {
     $('#go').show()
     $('#info').show()
     $('#games').hide()
+    $('#go').data('color', game.color)
+    $('#go').data('identifier', game.identifier)
   }
   
   $('.new_game').click(function() {
@@ -81,8 +83,6 @@ $(function() {
     get('/games/' + id, {}, function(game) {
       var game = JSON.parse(game)
       display_game(game)
-      $('#go').data('color', game.color)
-      $('#go').data('identifier', game.identifier)
     })
     return false
   })

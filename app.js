@@ -4,7 +4,8 @@ require('express/plugins')
 
 var sys = require('sys'),
     UserService = require('./models/user').UserService,
-    GameService = require('./models/game').GameService
+    GameService = require('./models/game').GameService,
+    StoneService = require('./models/stone').StoneService
 
 configure(function() {
   use(MethodOverride)
@@ -15,6 +16,7 @@ configure(function() {
 
 var User = new UserService()
 var Game = new GameService()
+var Stone = new StoneService()
 
 get('/', function() {
   this.sendfile(__dirname + '/public/index.html')
@@ -111,13 +113,16 @@ post('/stones', function() {
     var game = Game.find_by_identifier(this.params.post.game)
     
     if(game && user) {
-      if(game.set_stone(user, this.params.post.x, this.params.post.y)) {
+      var params = { game: game, user: user, x: this.params.post.x, y: this.params.post.y }
+      var errors = Stone.validate(params)
+      
+      if(errors.length == 0) {
+        Stone.set(params)
         this.respond(200, 'Stone set successfully.')
       } else {
-        this.respond(403, 'You cannot set this stone.')
+        this.respond(403, errors[0])
       }
-    }
-    
+    }    
   }
   
   this.respond(404, '')

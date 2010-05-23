@@ -30,6 +30,7 @@ end
 
 When /^I visit my first game$/ do
   $browser.li(:xpath, "//ul[@id='games']//a").click
+  When 'I wait for the AJAX call to finish'
 end
 
 Given /"(\w+)" created a game/ do |user|
