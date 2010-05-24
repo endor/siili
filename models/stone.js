@@ -6,6 +6,7 @@ StoneService.prototype.validate = function(options) {
   var errors = [], game = options.game, user = options.user, x = options.x,
       y = options.y, history = game.history
       
+  if(game.board[x][y] != 0) { errors.push("There's already a stone on this field.") }
   if(history.length == 0 && user.identifier != game.white.identifier) { errors.push("It's not your turn.") }
   if(history.length > 0  && user.identifier == history[history.length - 1].identifier) { errors.push("It's not your turn.") }
   

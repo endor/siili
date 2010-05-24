@@ -48,3 +48,9 @@ Given /"(\w+)" joined that game/ do |user|
     And 'I press the join button'
     And 'I follow "Logout"'
 end
+
+When /"([^\"]+)" goes to the game/ do |user_password|
+  When "I log in as \"#{user_password}\""
+  And 'I follow "My Games"'
+  And 'I visit my first game'
+end

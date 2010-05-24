@@ -55,3 +55,19 @@ Feature: Play
       And I wait for the AJAX call to finish
     Then I should not see white on "1_2"
       And I should see "It's not your turn."
+      
+  Scenario: cannot set stone if there already is a stone
+    Given a user "Black/Test"
+      And a user "White/Test"
+      And "White" created a game
+      And "Black" joined that game
+    When "White/Test" goes to the game
+      And I set a stone to "1_1"
+      And I wait for the AJAX call to finish
+      And I follow "Logout"
+      And "Black/Test" goes to the game
+      And I set a stone to "1_1"
+    Then I should see white on "1_1"
+      And I should not see black on "1_1"
+  
+  
