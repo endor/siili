@@ -1,6 +1,6 @@
 $(function() {
   flash = function(message) {
-    $('#flash').html(message).show().delay(2000).fadeOut('slow');
+    $('#flash').html(message).show().delay(2000).fadeOut('slow')
   }
 
   flash_error = function(error) {
@@ -17,6 +17,7 @@ $(function() {
         url: url,
         type: verb.toUpperCase(),
         data: data,
+        dataType: 'json',
         success: success,
         error: error
       })
@@ -40,7 +41,7 @@ $(function() {
     }
   })
   
-  store = new Store();
+  store = new Store()
   
   if(store.exists('user')) {
     $('nav').show()

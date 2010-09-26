@@ -1,7 +1,7 @@
 $(function() {  
   function user_data(form) {
     return {
-      user: $('#facebox .' + form + ' input.user').val(),
+      name: $('#facebox .' + form + ' input.user').val(),
       password: $('#facebox .' + form + ' input.password').val()
     }
   }
@@ -24,7 +24,7 @@ $(function() {
     })
   }
   
-  $('.register').click(function() {
+  $('.register').live('click', function() {
     var data = user_data('register_form')
     post('/users', data, function() {
       login(data)

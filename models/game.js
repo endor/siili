@@ -1,5 +1,3 @@
-var sys = require('sys')
-
 GameService = function() {}
 GameService.prototype.data = []
 
@@ -56,7 +54,6 @@ GameService.prototype.prepare = function(user) {
   return {
     board: this.board,
     identifier: this.identifier,
-    color: user.identifier == this.white.identifier ? 'white' : 'black',
     white: this.white.name,
     black: this.black ? this.black.name : null
   }

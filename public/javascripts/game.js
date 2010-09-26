@@ -38,7 +38,6 @@ $(function() {
     $('#go').show()
     $('#info').show()
     $('#games').hide()
-    $('#go').data('color', game.color)
     $('#go').data('identifier', game.identifier)
   }
   
@@ -85,5 +84,15 @@ $(function() {
       display_game(game)
     })
     return false
+  })
+  
+  $('.field.empty').live('click', function() {
+    var id = $(this).attr('id').split('_')
+    var params = { x: id[0], y: id[1], game: $('#go').data('identifier') }
+    
+    post('/stones', params, function(game) {
+      var game = JSON.parse(game)
+      display_game(game)
+    }, flash_error)
   })
 })

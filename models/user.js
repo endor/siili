@@ -1,5 +1,3 @@
-var sys = require('sys')
-
 UserService = function() {}
 UserService.prototype.data = []
 

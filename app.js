@@ -1,131 +1,130 @@
-require.paths.unshift(__dirname + '/../express/lib')
-require('express')
-require('express/plugins')
+var express = require('express'),
+  app = express.createServer(),
+  sys = require('sys'),
+  UserService = require('./models/user').UserService,
+  GameService = require('./models/game').GameService,
+  Stone = require('./models/stone').Stone
 
-var sys = require('sys'),
-    UserService = require('./models/user').UserService,
-    GameService = require('./models/game').GameService,
-    StoneService = require('./models/stone').StoneService
-
-configure(function() {
-  use(MethodOverride)
-  use(Logger)
-  use(Static)
-  set('root', __dirname)
+app.configure(function() {
+  app.use(express.methodOverride())
+  app.use(express.bodyDecoder())
+  app.use(express.logger())
+  app.use(app.router)
+  app.use(express.staticProvider(__dirname))
 })
 
-var User = new UserService()
-var Game = new GameService()
-var Stone = new StoneService()
+var User = new UserService(),
+  Game = new GameService()
 
-get('/', function() {
-  this.sendfile(__dirname + '/public/index.html')
+app.get('/', function(req, res) {
+  res.sendfile(__dirname + '/public/index.html')
 })
 
-post('/users', function() {
-  var name = this.params.post.user
-  var password = this.params.post.password
-  var user = User.find_by_name(name)
-
+app.post('/users', function(req, res) {
+  var name = req.body.name,
+    password = req.body.password,
+    user = User.find_by_name(name)
+  
   if(user) {
-    this.respond(403, 'User already registered.')
+    res.send('User already registered.', 403)
   } else {
     User.save({name: name, password: password})
-    
-    this.respond(200, JSON.stringify(user))
+    res.contentType('json')
+    res.send(user, 200)
   }
 })
 
-post('/sessions', function() {
-  var name = this.params.post.user
-  var password = this.params.post.password
-  var user = User.find_by_name(name)
+app.post('/sessions', function(req, res) {
+  var name = req.body.name,
+    password = req.body.password,
+    user = User.find_by_name(name)
   
   if(user && user.password == password) {
-    this.contentType('json')
-    this.respond(200, JSON.stringify(user))
+    res.contentType('json')
+    res.send(user, 200)
   } else {
-    this.respond(403, 'Wrong user/password.')
+    res.send('Wrong user/password.', 403)
   }
 })
 
-post('/games', function() {
-  if(this.params.post.user) {
-    var user = User.find_by_identifier(this.params.post.user)
-    var game = Game.save({board_size: this.params.post.board_size, white: user})
+app.post('/games', function(req, res) {
+  if(req.body.user) {
+    var user = User.find_by_identifier(req.body.user),
+      game = Game.save({board_size: req.body.board_size, white: user})
 
     if(game && user) {
-      this.contentType('json')
-      this.respond(200, JSON.stringify(game.prepare(user)))    
+      res.contentType('json')
+      res.send(game.prepare(user), 200)
     }
   }
   
-  this.respond(403, 'Game could not be created.')
+  res.send('Game could not be created.', 403)
 })
 
-put('/games/:id', function() {
-  if(this.params.post.user) {
-    var user = User.find_by_identifier(this.params.post.user)
-    var game = Game.find_by_identifier(this.params.path.id)
+app.put('/games/:id', function(req, res) {
+  if(req.params.post.user) {
+    var user = User.find_by_identifier(req.params.post.user),
+      game = Game.find_by_identifier(req.params.path.id)
 
     if(game && user) {
       if(game.participate(user)) {
-        this.contentType('json')
-        this.respond(200, JSON.stringify(game.prepare(user)))
+        res.contentType('json')
+        res.send(JSON.stringify(game.prepare(user)), 200)
       } else {
-        this.respond(403, 'You cannot join your own game.')
+        res.send('You cannot join your own game.', 403)
       }
     }
   }
   
-  this.respond(400, 'Game could not be joined.')
+  res.send('Game could not be joined.', 400)
 })
 
-get('/games', function() {
-  if(this.params.get.user) {
-    var user = User.find_by_identifier(this.params.get.user)
-    var games = Game.find_all_by_user(user)
+app.get('/games', function(req, res) {
+  if(req.body.user) {
+    var user = User.find_by_identifier(req.body.user),
+      games = Game.find_all_by_user(user)
     
     if(games)
-      this.respond(200, JSON.stringify(games))
+      res.send(JSON.stringify(games), 200)
   }
   
-  this.respond(404, 'You don\'t have any games.')
+  res.send('You don\'t have any games.', 404)
 })
 
-get('/games/:id', function() {
-  if(this.params.get.user) {
-    var user = User.find_by_identifier(this.params.get.user)
-    var game = Game.find_by_identifier(this.params.path.id)
+app.get('/games/:id', function(req, res) {
+  if(req.params.get.user) {
+    var user = User.find_by_identifier(req.params.get.user),
+      game = Game.find_by_identifier(req.params.path.id)
 
     if(game && user) {
       sys.puts(sys.inspect(game.prepare(user)))
-      this.respond(200, JSON.stringify(game.prepare(user)))
+      res.respond(JSON.stringify(game.prepare(user)), 200)
     }
   }
   
-  this.respond(404, 'No such game.')
+  res.send('No such game.', 404)
 })
 
-post('/stones', function() {
-  if(this.params.post.user) {
-    var user = User.find_by_identifier(this.params.post.user)
-    var game = Game.find_by_identifier(this.params.post.game)
+app.post('/stones', function(req, res) {
+  if(req.params.post.user) {
+    var user = User.find_by_identifier(req.params.post.user),
+      game = Game.find_by_identifier(req.params.post.game),
+      stone = new Stone(params)
     
     if(game && user) {
-      var params = { game: game, user: user, x: this.params.post.x, y: this.params.post.y }
-      var errors = Stone.validate(params)
+      var params = { game: game, user: user, x: req.params.post.x, y: req.params.post.y },
+        errors = stone.validate
       
       if(errors.length == 0) {
-        Stone.set(params)
-        this.respond(200, 'Stone set successfully.')
+        stone.set
+        res.send(params.game.prepare(user), 200)
       } else {
-        this.respond(403, errors[0])
+        res.send(errors[0], 403)
       }
     }    
   }
   
-  this.respond(404, '')
+  res.send('', 404)
 })
 
-run()
+app.listen(3000)
