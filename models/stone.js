@@ -37,37 +37,39 @@ Stone.prototype.set = function(options) {
       }
     }
   })
-}
+};
 
-Stone.prototype.direction = function(callback, x, y) {
-  if(callback.call(this)) {
-    var value = this.game.board[x][y],
-      user = null
+(function() {
+  var direction = function(callback, x, y) {
+    if(callback.call(this)) {
+      var value = this.game.board[x][y],
+        user = null
+
+      if(value === 1) { user = this.game.white }
+      if(value === 2) { user = this.game.black }
+
+      return new Stone({ game: this.game, user: user, x: x, y: y })
+    } else {
+      return null
+    }  
+  }
   
-    if(value === 1) { user = this.game.white }
-    if(value === 2) { user = this.game.black }
+  Stone.prototype.north = function() {
+    return direction.call(this, function() { return this.y - 1 >= 0 }, this.x, this.y - 1)
+  }
 
-    return new Stone({ game: this.game, user: user, x: x, y: y })
-  } else {
-    return null
+  Stone.prototype.south = function() {
+    return direction.call(this, function() { return this.y + 1 < this.game.board_size }, this.x, this.y + 1)
+  }
+
+  Stone.prototype.east = function() {
+    return direction.call(this, function() { return this.x - 1 >= 0 }, this.x - 1, this.y)  
+  }
+
+  Stone.prototype.west = function() {
+    return direction.call(this, function() { return this.x + 1 < this.game.board_size }, this.x + 1, this.y)
   }  
-}
-
-Stone.prototype.north = function() {
-  return this.direction(function() { return this.y - 1 >= 0 }, this.x, this.y - 1)
-}
-
-Stone.prototype.south = function() {
-  return this.direction(function() { return this.y + 1 < this.game.board_size }, this.x, this.y + 1)
-}
-
-Stone.prototype.east = function() {
-  return this.direction(function() { return this.x - 1 >= 0 }, this.x - 1, this.y)  
-}
-
-Stone.prototype.west = function() {
-  return this.direction(function() { return this.x + 1 < this.game.board_size }, this.x + 1, this.y)
-}
+})()
 
 Stone.prototype.free = function(stone, already_looked_up) {
   var free = false
