@@ -82,6 +82,7 @@ describe 'Stone'
       })
       game.board[1][2].should.equal 0
       game.board[1][3].should.equal 0
+      game.prisoners_of_white.should.equal 2
     end
     
     it 'should remove complex dead stones'
@@ -120,13 +121,13 @@ describe 'Stone'
         { user: white, x: 3, y: 4 },
         { user: black, x: 5, y: 3 },
         { user: white, x: 2, y: 2 }
-        
       ].forEach(function(move) {
         stone = new Stone({ game: game, user: move.user, x: move.x, y: move.y })
         stone.set()
       })
       game.board[1][1].should.equal 0
-      game.board[3][3].should.equal 0      
+      game.board[3][3].should.equal 0
+      game.prisoners_of_white.should.equal 8
     end
   end
 end

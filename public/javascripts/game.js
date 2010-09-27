@@ -26,9 +26,10 @@ $(function() {
   }
   
   var set_info = function(game) {
-    $('#info').html('<h2>Players</h2><ul class="players"><li>' + game.white + '</li></ul>')
+    $('#info').html('<h2>Players</h2><ul class="players"><li>' + game.white +
+      ',<br />Prisoners: ' + game.prisoners_of_white + '</li></ul>')
     if(game.black)
-      $('#info .players').append('<li>' + game.black + '</li>')
+      $('#info .players').append('<li>' + game.black + ',<br />Prisoners: ' + game.prisoners_of_black + '</li>')
   }
   
   var display_game = function(game) {

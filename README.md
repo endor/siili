@@ -12,11 +12,12 @@ Start with `node app.js`.
 
 ## TODO
 
+* Fix my games / joining a new game.
+* Calculate user's rank.
 * Repair acceptance tests (something wrong with culerity?).
 * Use CouchDB as backend.
 * Count who has won at the end.
 * Allow users to pass.
 * Allow users to resign.
-* Count and display dead stones for each user.
 * Push updates on her games to the user.
 * Allow for minifying the games into small boxes at the bottom.
