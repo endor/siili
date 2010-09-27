@@ -28,14 +28,13 @@ Stone.prototype.set = function(options) {
   
   this.game.board[this.x][this.y] = value
   this.game.history.push({x: this.x, y: this.y, identifier: this.user.identifier, color: color})
-  
+
   this.directions.forEach(function(direction) {
     var _stone = stone[direction]()
     if(_stone && _stone.value !== value && _stone.value !== 0) {
       if(!stone.free(_stone, [])) {
         stone.destroy(_stone, [])
       }
-      console.log(direction, color, stone.id, stone.free(_stone, []))
     }
   })
 }
@@ -72,22 +71,19 @@ Stone.prototype.west = function() {
 
 Stone.prototype.free = function(stone, already_looked_up) {
   var free = false
-
   already_looked_up.push(stone.id);
   
   this.directions.forEach(function(direction) {
     var _stone = stone[direction]()
-    
     if(!_stone) { return }
-
     if(_stone.user && _stone.user.identifier === stone.user.identifier
         && already_looked_up.indexOf(_stone.id) < 0) {
       free = free || stone.free(_stone, already_looked_up)
-    } else if(_stone.game.board[_stone.x][stone.y] === 0) {
+    } else if(_stone.game.board[_stone.x][_stone.y] === 0) {
       free = free || true
-    }        
+    }
   })
-  
+
   return free
 }
 

@@ -82,6 +82,51 @@ describe 'Stone'
       })
       game.board[1][2].should.equal 0
       game.board[1][3].should.equal 0
-    end    
+    end
+    
+    it 'should remove complex dead stones'
+      /*
+        |------------
+        |   w w w   b
+        | w b b b w b 
+        | w b w b w b
+        | w b b b w b
+        |   w w w
+        |
+      */
+      [
+        { user: white, x: 0, y: 1 },
+        { user: black, x: 1, y: 1 },
+        { user: white, x: 0, y: 2 },
+        { user: black, x: 1, y: 2 },
+        { user: white, x: 0, y: 3 },
+        { user: black, x: 1, y: 3 },
+        { user: white, x: 1, y: 0 },
+        { user: black, x: 2, y: 1 },
+        { user: white, x: 2, y: 0 },
+        { user: black, x: 3, y: 1 },
+        { user: white, x: 3, y: 0 },
+        { user: black, x: 3, y: 2 },
+        { user: white, x: 4, y: 1 },
+        { user: black, x: 3, y: 3 },
+        { user: white, x: 4, y: 2 },
+        { user: black, x: 2, y: 3 },
+        { user: white, x: 4, y: 3 },
+        { user: black, x: 5, y: 0 },
+        { user: white, x: 1, y: 4 },
+        { user: black, x: 5, y: 1 },
+        { user: white, x: 2, y: 4 },
+        { user: black, x: 5, y: 2 },
+        { user: white, x: 3, y: 4 },
+        { user: black, x: 5, y: 3 },
+        { user: white, x: 2, y: 2 }
+        
+      ].forEach(function(move) {
+        stone = new Stone({ game: game, user: move.user, x: move.x, y: move.y })
+        stone.set()
+      })
+      game.board[1][1].should.equal 0
+      game.board[3][3].should.equal 0      
+    end
   end
 end
