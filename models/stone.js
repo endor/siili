@@ -18,7 +18,8 @@
     if(this.game.board[this.x][this.y] !== 0) { errors.push("There's already a stone on this field.") }
     if(history.length === 0 && this.user.identifier !== this.game.white.identifier) { errors.push("It's not your turn.") }
     if(history.length > 0  && this.user.identifier === history[history.length - 1].identifier) { errors.push("It's not your turn.") }
-
+    if(!this.game.black || !this.game.white) { errors.push("There needs to be another player before the game can start.") }
+    
     return errors
   }
 
@@ -30,14 +31,14 @@
     this.game.board[this.x][this.y] = value
     this.game.history.push({x: this.x, y: this.y, identifier: this.user.identifier, color: color})
 
-    this.directions.forEach(function(direction) {
-      var _stone = stone[direction]()
-      if(_stone && _stone.value !== value && _stone.value !== 0) {
-        if(!stone.free(_stone, [])) {
-          stone.destroy(color, _stone, [])
-        }
-      }
-    })
+    // this.directions.forEach(function(direction) {
+    //   var _stone = stone[direction].call(stone)
+    //   if(_stone && _stone.value !== value && _stone.value !== 0) {
+    //     if(!stone.free(_stone, [])) {
+    //       stone.destroy(color, _stone, [])
+    //     }
+    //   }
+    // })
   };
 
   (function() {
@@ -73,11 +74,11 @@
   })()
 
   Stone.prototype.free = function(stone, already_looked_up) {
-    var free = false
+    var free = false, that = this
     already_looked_up.push(stone.id);
 
     this.directions.forEach(function(direction) {
-      var _stone = stone[direction]()
+      var _stone = stone[direction].call(that)
       if(!_stone) { return }
       if(_stone.user && _stone.user.identifier === stone.user.identifier
           && already_looked_up.indexOf(_stone.id) < 0) {

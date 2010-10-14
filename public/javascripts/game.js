@@ -78,7 +78,6 @@ $(function() {
     var params = { x: id[0], y: id[1], game: $('#go').data('identifier') }
     
     siili.post('/stones', params, function(game) {
-      var game = JSON.parse(game)
       display_game(game)
     }, siili.flash_error)
   })

@@ -103,25 +103,26 @@ app.get('/games/:id', function(req, res) {
 })
 
 app.post('/stones', function(req, res) {
-  if(req.params.post.user) {
-    var user = User.find_by_identifier(req.params.post.user),
-      game = Game.find_by_identifier(req.params.post.game),
-      stone = new Stone(params)
+  var body = req.body
+    
+  if(body.user) {
+    var user = User.find_by_identifier(body.user),
+      game = Game.find_by_identifier(body.game)
     
     if(game && user) {
-      var params = { game: game, user: user, x: req.params.post.x, y: req.params.post.y },
-        errors = stone.validate
+      var stone = new Stone({ game: game, user: user, x: body.x, y: body.y }),
+        errors = stone.validate()
       
-      if(errors.length == 0) {
-        stone.set
-        res.send(params.game.prepare(user), 200)
+      if(errors.length === 0) {
+        stone.set()
+        res.send(game.prepare(user), 200)
       } else {
         res.send(errors[0], 403)
       }
     }    
   }
   
-  res.send('', 404)
+  res.send('Cannot set stone.', 404)
 })
 
 app.listen(3000)
