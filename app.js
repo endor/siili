@@ -110,7 +110,7 @@ app.post('/stones', function(req, res) {
       game = Game.find_by_identifier(body.game)
     
     if(game && user) {
-      var stone = new Stone({ game: game, user: user, x: body.x, y: body.y }),
+      var stone = new Stone({ game: game, user: user, x: parseInt(body.x, 10), y: parseInt(body.y, 10) }),
         errors = stone.validate()
       
       if(errors.length === 0) {

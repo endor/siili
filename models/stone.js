@@ -31,14 +31,14 @@
     this.game.board[this.x][this.y] = value
     this.game.history.push({x: this.x, y: this.y, identifier: this.user.identifier, color: color})
 
-    // this.directions.forEach(function(direction) {
-    //   var _stone = stone[direction].call(stone)
-    //   if(_stone && _stone.value !== value && _stone.value !== 0) {
-    //     if(!stone.free(_stone, [])) {
-    //       stone.destroy(color, _stone, [])
-    //     }
-    //   }
-    // })
+    this.directions.forEach(function(direction) {
+      var _stone = stone[direction]()
+      if(_stone && _stone.value !== value && _stone.value !== 0) {
+        if(!stone.free(_stone, [])) {
+          stone.destroy(color, _stone, [])
+        }
+      }
+    })
   };
 
   (function() {
@@ -74,11 +74,11 @@
   })()
 
   Stone.prototype.free = function(stone, already_looked_up) {
-    var free = false, that = this
+    var free = false
     already_looked_up.push(stone.id);
 
     this.directions.forEach(function(direction) {
-      var _stone = stone[direction].call(that)
+      var _stone = stone[direction]()
       if(!_stone) { return }
       if(_stone.user && _stone.user.identifier === stone.user.identifier
           && already_looked_up.indexOf(_stone.id) < 0) {

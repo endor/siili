@@ -18,6 +18,7 @@ $(function() {
     siili.post('/sessions', data, function(user) {
       close_facebox()
       siili.store.set('user', user.identifier)
+      siili.display_games()
       $('nav').show()
     }, function(error) {
       display_error(error, 'login_form')
