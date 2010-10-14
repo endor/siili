@@ -29,7 +29,7 @@ When /I press the join button/ do
 end
 
 When /^I visit my first game$/ do
-  $browser.li(:xpath, "//ul[@id='games']//a").click
+  $browser.link(:xpath, "//a[@class='game']").click
   When 'I wait for the AJAX call to finish'
 end
 
@@ -51,6 +51,5 @@ end
 
 When /"([^\"]+)" goes to the game/ do |user_password|
   When "I log in as \"#{user_password}\""
-  And 'I follow "My Games"'
   And 'I visit my first game'
 end

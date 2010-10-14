@@ -19,8 +19,6 @@ Feature: Game
       And "Klaus" joined that game
       And "Klaus" created a game
     When I log in as "Klaus/Test"
-      And I follow "My Games"
-      And I wait for the AJAX call to finish
     Then I should see "2" games
 
   Scenario: join a game
