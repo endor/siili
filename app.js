@@ -90,13 +90,12 @@ app.get('/games', function(req, res) {
 })
 
 app.get('/games/:id', function(req, res) {
-  if(req.params.get.user) {
-    var user = User.find_by_identifier(req.params.get.user),
-      game = Game.find_by_identifier(req.params.path.id)
+  if(req.query.user) {
+    var user = User.find_by_identifier(req.query.user),
+      game = Game.find_by_identifier(req.params.id)
 
     if(game && user) {
-      sys.puts(sys.inspect(game.prepare(user)))
-      res.respond(JSON.stringify(game.prepare(user)), 200)
+      res.send(game.prepare(user), 200)
     }
   }
   

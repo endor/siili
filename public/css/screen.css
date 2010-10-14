@@ -67,10 +67,10 @@ h1 {
   top: 70px;
   left: 600px;
   width: 150px;
-  border: solid 1px black;
   height: 450px;
   padding: 0px;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 #games li {

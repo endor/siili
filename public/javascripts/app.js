@@ -28,9 +28,11 @@ $(function() {
   define_route('get')
   
   siili.display_games = function() {
+    var $games = $('#games')
     siili.get('/games', {}, function(games) {
+      $games.html('')
       $.each(games, function() {
-        $('#games').append('<li class="game"><a href="#" class="game">' + this.identifier + '</a></li>')        
+        $games.append('<li class="game"><a href="#" class="game">' + this.identifier + '</a></li>')        
       })
     }, siili.flash_error)
   }

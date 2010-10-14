@@ -68,7 +68,6 @@ $(function() {
   $('a.game').live('click', function() {
     var id = $(this).text()
     siili.get('/games/' + id, {}, function(game) {
-      var game = JSON.parse(game)
       display_game(game)
     })
     return false
