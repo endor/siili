@@ -64,7 +64,7 @@ app.post('/games', function(req, res) {
 app.put('/games/:id', function(req, res) {
   if(req.body.user) {
     var user = User.find_by_identifier(req.body.user),
-      game = Game.find_by_identifier(req.body.id)
+      game = Game.find_by_identifier(req.params.id)
 
     if(game && user) {
       if(game.participate(user)) {
