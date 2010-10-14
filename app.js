@@ -80,15 +80,13 @@ app.put('/games/:id', function(req, res) {
 })
 
 app.get('/games', function(req, res) {
-  if(req.body.user) {
-    var user = User.find_by_identifier(req.body.user),
-      games = Game.find_all_by_user(user)
+  if(req.query.user) {
+    var user = User.find_by_identifier(req.query.user),
+      games = Game.find_all_by_user(user),
+      result = games || []
     
-    if(games)
-      res.send(JSON.stringify(games), 200)
+    res.send(JSON.stringify(result), 200)
   }
-  
-  res.send('You don\'t have any games.', 404)
 })
 
 app.get('/games/:id', function(req, res) {

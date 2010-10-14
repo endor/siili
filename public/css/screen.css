@@ -19,7 +19,7 @@ body {
 nav {
   position: absolute;
   top: 0px;
-  left: 450px;
+  left: 500px;
   display: none;
 }
 
@@ -48,6 +48,9 @@ h1 {
   left: 20px;
   margin: 0px;
   color: #CCCCCC;
+  padding-left: 50px;
+  background: url(../images/favicon.png);
+  background-repeat: no-repeat;
 }
 
 #go {
@@ -61,9 +64,25 @@ h1 {
 
 #games {
   position: absolute;
-  top: 90px;
-  left: 160px;
+  top: 70px;
+  left: 600px;
+  width: 150px;
+  border: solid 1px black;
+  height: 450px;
   padding: 0px;
+  overflow: hidden;
+}
+
+#games li {
+  display: inline-block;
+  width: 75px;
+  height: 75px;
+  margin-bottom: 15px;
+  border: solid 1px gray;
+  -webkit-transition: -webkit-transform 0.7s linear;
+  -moz-transition: -moz-transform 0.7s linear;
+  -o-transition: -o-transform 0.7s linear;
+  transition: transform 0.7s linear;
 }
 
 #info {

@@ -12,6 +12,7 @@ Start with `node app.js`.
 
 ## TODO
 
+* Allow users to first confirm their move before actually submitting it || maybe see stone when hovering the field.
 * Fix my games / joining a new game.
 * Calculate user's rank.
 * Repair acceptance tests (something wrong with culerity?).
@@ -21,3 +22,5 @@ Start with `node app.js`.
 * Allow users to resign.
 * Push updates on her games to the user.
 * Allow for minifying the games into small boxes at the bottom.
+* Add komi.
+* Review games.

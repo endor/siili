@@ -1,16 +1,16 @@
 $(function() {
-  flash = function(message) {
+  siili.flash = function(message) {
     $('#flash').html(message).show().delay(2000).fadeOut('slow')
   }
 
-  flash_error = function(error) {
-    flash(error.responseText)
+  siili.flash_error = function(error) {
+    siili.flash(error.responseText)
   }
   
   var define_route = function(verb) {
-    window[verb] = function(url, data, success, error) {
-      if(store.exists('user')) {
-        $.extend(data, {user: store.get('user')})
+    siili[verb] = function(url, data, success, error) {
+      if(siili.store.exists('user')) {
+        $.extend(data, {user: siili.store.get('user')})
       }
 
       $.ajax({
@@ -26,11 +26,13 @@ $(function() {
   define_route('post')
   define_route('put')
   define_route('get')
-
-  function show_login_form() {
-    $.facebox($('#login').html())
-    $('#facebox div.form:first').addClass('register_form')
-    $('#facebox div.form:last').addClass('login_form')  
+  
+  siili.display_games = function() {
+    siili.get('/games', {}, function(games) {
+      $.each(games, function() {
+        $('#games').append('<li class="game"><a href="#" class="game">' + this.identifier + '</a></li>')        
+      })
+    }, siili.flash_error)
   }
 
   $(document).bind('reveal.facebox', function() {
@@ -41,11 +43,14 @@ $(function() {
     }
   })
   
-  store = new Store()
+  siili.store = new Store()
   
-  if(store.exists('user')) {
+  if(siili.store.exists('user')) {
     $('nav').show()
+    siili.display_games()
   } else {
-    show_login_form()
+    $.facebox($('#login').html())
+    $('#facebox div.form:first').addClass('register_form')
+    $('#facebox div.form:last').addClass('login_form')  
   }  
 })

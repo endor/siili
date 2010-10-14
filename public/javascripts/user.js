@@ -1,23 +1,23 @@
 $(function() {  
-  function user_data(form) {
+  var user_data = function(form) {
     return {
       name: $('#facebox .' + form + ' input.user').val(),
       password: $('#facebox .' + form + ' input.password').val()
     }
   }
   
-  function display_error(error, form) {
+  var display_error = function(error, form) {
     $('#facebox .' + form).append('<div class="error">' + error.responseText + '</div>')
   }
   
-  function close_facebox() {
+  var close_facebox = function() {
     $(document).trigger('close.facebox')
   }
   
-  function login(data) {
-    post('/sessions', data, function(user) {
+  var login = function(data) {
+    siili.post('/sessions', data, function(user) {
       close_facebox()
-      store.set('user', user.identifier)
+      siili.store.set('user', user.identifier)
       $('nav').show()
     }, function(error) {
       display_error(error, 'login_form')
@@ -26,7 +26,7 @@ $(function() {
   
   $('.register').live('click', function() {
     var data = user_data('register_form')
-    post('/users', data, function() {
+    siili.post('/users', data, function() {
       login(data)
     }, function(error) {
       display_error(error, 'register_form')
@@ -40,7 +40,7 @@ $(function() {
   })
   
   $('.logout').click(function() {
-    store.clear('user')
+    siili.store.clear('user')
     window.location.reload()
     return false
   })

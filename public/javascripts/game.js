@@ -38,14 +38,14 @@ $(function() {
     set_info(game)
     $('#go').show()
     $('#info').show()
-    $('#games').hide()
     $('#go').data('identifier', game.identifier)
   }
   
   $('.new_game').click(function() {
-    post('/games', {board_size: 9}, function(game) {
+    siili.post('/games', {board_size: 9}, function(game) {
       display_game(game)
-    }, flash_error)
+      siili.display_games()
+    }, siili.flash_error)
     return false
   })
   
@@ -56,7 +56,7 @@ $(function() {
   
   $('input.join_game').live('click', function() {
     var game_id = $('#facebox .game').val()
-    put('/games/' + game_id, {}, function(game) {
+    siili.put('/games/' + game_id, {}, function(game) {
       $(document).trigger('close.facebox')
       display_game(game)
     }, function(error) {
@@ -65,22 +65,9 @@ $(function() {
     return false
   })
   
-  $('.my_games').live('click', function() {
-    get('/games', {}, function(games) {
-      $('#go').hide()
-      $('#info').hide()
-      $('h1').html('siili')
-      $('#games').html('').show()
-      $.each(JSON.parse(games), function() {
-        $('#games').append('<li class="game"><a href="#" class="game">' + this.identifier + '</a></li>')        
-      })
-    }, flash_error)
-    return false
-  })
-  
   $('a.game').live('click', function() {
     var id = $(this).text()
-    get('/games/' + id, {}, function(game) {
+    siili.get('/games/' + id, {}, function(game) {
       var game = JSON.parse(game)
       display_game(game)
     })
@@ -91,9 +78,9 @@ $(function() {
     var id = $(this).attr('id').split('_')
     var params = { x: id[0], y: id[1], game: $('#go').data('identifier') }
     
-    post('/stones', params, function(game) {
+    siili.post('/stones', params, function(game) {
       var game = JSON.parse(game)
       display_game(game)
-    }, flash_error)
+    }, siili.flash_error)
   })
 })
