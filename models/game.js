@@ -36,7 +36,7 @@
       var game = this.data[i];
       if((game.white && game.white.identifier == user.identifier) ||
          (game.black && game.black.identifier == user.identifier)) {
-        result.push(game)
+        result.push(GameService.prototype.prepare.call(game, user))
       }
     }  
     return result

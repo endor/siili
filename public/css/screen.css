@@ -53,15 +53,6 @@ h1 {
   background-repeat: no-repeat;
 }
 
-#go {
-  position: absolute;
-  top: 90px;
-  left: 160px;
-  width: 300px;
-  height: 300px;
-  padding: 0px;
-}
-
 #games {
   position: absolute;
   top: 70px;

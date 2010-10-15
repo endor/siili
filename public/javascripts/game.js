@@ -26,10 +26,10 @@ $(function() {
   }
   
   var set_info = function(game) {
-    $('#info').html('<h2>Players</h2><ul class="players"><li>' + game.white.name +
+    $('#info').html('<h2>Players</h2><ul class="players"><li>' + game.white +
       ',<br />Prisoners: ' + game.prisoners_of_white + '</li></ul>')
     if(game.black)
-      $('#info .players').append('<li>' + game.black.name + ',<br />Prisoners: ' + game.prisoners_of_black + '</li>')
+      $('#info .players').append('<li>' + game.black + ',<br />Prisoners: ' + game.prisoners_of_black + '</li>')
     $('#info').show()
   }
   
@@ -45,7 +45,7 @@ $(function() {
     function maximize(game, index) {
       var $game = $('div.game[data-identifier=\'' + game.identifier + '\']'),
         translateY = 120 - (index * 100)
-
+      
       $game.
         addClass('playable').
         css({
@@ -63,8 +63,9 @@ $(function() {
   
   $('.new_game').click(function() {
     siili.post('/games', {board_size: 9}, function(game) {
-      display_game(game)
-      siili.display_games()
+      siili.display_games(function() {
+        display_game(game, $('div.game').length - 1)
+      })
     }, siili.flash_error)
     return false
   })
@@ -78,25 +79,29 @@ $(function() {
     var game_id = $('#facebox .game').val()
     siili.put('/games/' + game_id, {}, function(game) {
       $(document).trigger('close.facebox')
-      display_game(game)
+      siili.display_games(function() {
+        display_game(game, $('div.game').length - 1)
+      })
     }, function(error) {
       $('#facebox form').append('<div class="error">' + error.responseText + '</div>')
     })
     return false
   })
   
-  $('div.game a').live('click', function() {
+  $('div.game:not(.playable) a').live('click', function() {
     var game = $(this).parents('div.game')
     display_game(JSON.parse(game.attr('data-game').replace(/'/g, '"')), game.attr('data-index'))
     return false
   })
   
-  $('.playable .field.empty').live('click', function() {
+  $('.playable .field.empty').live('click', function(evt) {
     var id = $(this).attr('id').split('_')
-    var params = { x: id[0], y: id[1], game: $('#go').data('identifier') }
+    var params = { x: id[0], y: id[1], game: $('.game.playable').attr('data-identifier') }
     
     siili.post('/stones', params, function(game) {
-      display_game(game)
+      var board_div = $('.game.playable .board')
+      board_div.html('')
+      siili.build_board(game.board, board_div)
     }, siili.flash_error)
   })
 })

@@ -27,7 +27,7 @@ $(function() {
   define_route('put')
   define_route('get')
   
-  siili.display_games = function() {
+  siili.display_games = function(callback) {
     $('div.game').remove()
     
     siili.get('/games', {}, function(games) {
@@ -55,6 +55,10 @@ $(function() {
           div.addClass('animate')
         }, 100, game_div)
       })
+      
+      if(callback) {
+        callback()
+      }
     }, siili.flash_error)
   }
 
