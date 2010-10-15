@@ -44,12 +44,13 @@ $(function() {
     
     function maximize(game, index) {
       var $game = $('div.game[data-identifier=\'' + game.identifier + '\']'),
-        translateY = 120 - (index * 100)
+        translateY = 180 - ((index % 5) * 100) + 'px',
+        translateX = -350 -(Math.floor(index/5) * 100) + 'px'
       
       $game.
         addClass('playable').
         css({
-          '-webkit-transform': 'scale(1) translateX(-400px) translateY(' + translateY + 'px)'
+          '-webkit-transform': 'scale(1) translateX(' + translateX + ') translateY(' + translateY + ')'
         })      
     }
     

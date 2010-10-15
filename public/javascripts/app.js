@@ -46,10 +46,14 @@ $(function() {
         var game_div = $('div.game[data-identifier=\'' + id + '\']')
 
         siili.build_board(this.board, game_div.find('div.board'))
+        
+        var left = (550 + Math.floor(index/5) * 100) + 'px',
+          top = (-20 + ((index % 5) - 1) * 100) + 'px'
+          
         game_div.css({
           '-webkit-transform': 'scale(0.2)',
-          'left': '600px',
-          'top': (30 + ((index - 1) * 100)) + 'px'
+          'left': left,
+          'top': top
         })
         setTimeout(function(div) {
           div.addClass('animate')
