@@ -28,11 +28,32 @@ $(function() {
   define_route('get')
   
   siili.display_games = function() {
-    var $games = $('#games')
+    $('div.game').remove()
+    
     siili.get('/games', {}, function(games) {
-      $games.html('')
-      $.each(games, function() {
-        $games.append('<li class="game"><a href="#" class="game">' + this.identifier + '</a></li>')        
+      $.each(games, function(index) {
+        var id = this.identifier,
+          data = JSON.stringify(this).replace(/"/g, '\''),
+          game_template = '' +
+            '<div class="game" data-identifier="' + id + '" data-game="' + data + '" data-index="' + index + '">' +
+              '<a href="#">' +
+                '<p>' + id + '</p>' + 
+                '<div class="board"></div>' +
+              '</a>' +
+            '</div>'
+
+        $('body').append(game_template)
+        var game_div = $('div.game[data-identifier=\'' + id + '\']')
+
+        siili.build_board(this.board, game_div.find('div.board'))
+        game_div.css({
+          '-webkit-transform': 'scale(0.2)',
+          'left': '600px',
+          'top': (30 + ((index - 1) * 100)) + 'px'
+        })
+        setTimeout(function(div) {
+          div.addClass('animate')
+        }, 100, game_div)
       })
     }, siili.flash_error)
   }

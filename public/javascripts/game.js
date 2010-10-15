@@ -1,44 +1,64 @@
 $(function() {
-  var build_board = function(data) {
-    $('#go').html('')
+  siili.build_board = function(data, element) {
+    var class_name_for_value = function(value) {
+      switch(value) {
+        case 0:
+          return 'empty'; break
+        case 1:
+          return 'white'; break
+        case 2:
+          return 'black'; break
+      }    
+    }
+    
+    element.html('')
     for(var row in data) {
       if(row.match(/\d+/)) {
         for(col in data[row]) {
           if(col.match(/\d+/)) {
             var id = row + '_' + col
             var class_name = class_name_for_value(data[row][col])
-            $('#go').append('<div class="field ' + class_name + '" id="' + id + '"></div>')
+            element.append('<div class="field ' + class_name + '" id="' + id + '"></div>')
           }
         }
       }
     }
   }
   
-  var class_name_for_value = function(value) {
-    switch(value) {
-      case 0:
-        return 'empty'; break
-      case 1:
-        return 'white'; break
-      case 2:
-        return 'black'; break
-    }    
-  }
-  
   var set_info = function(game) {
-    $('#info').html('<h2>Players</h2><ul class="players"><li>' + game.white +
+    $('#info').html('<h2>Players</h2><ul class="players"><li>' + game.white.name +
       ',<br />Prisoners: ' + game.prisoners_of_white + '</li></ul>')
     if(game.black)
-      $('#info .players').append('<li>' + game.black + ',<br />Prisoners: ' + game.prisoners_of_black + '</li>')
+      $('#info .players').append('<li>' + game.black.name + ',<br />Prisoners: ' + game.prisoners_of_black + '</li>')
+    $('#info').show()
   }
   
-  var display_game = function(game) {
-    build_board(game.board)
-    $('h1').html('siili - ' + game.identifier)
+  var display_game = function(game, index) {
+    function minimize(maximized, index) {
+      maximized.
+        removeClass('playable').
+        css({
+          '-webkit-transform': 'scale(0.2) translateX(0px) translateY(0px)'
+        })
+    }
+    
+    function maximize(game, index) {
+      var $game = $('div.game[data-identifier=\'' + game.identifier + '\']'),
+        translateY = 120 - (index * 100)
+
+      $game.
+        addClass('playable').
+        css({
+          '-webkit-transform': 'scale(1) translateX(-400px) translateY(' + translateY + 'px)'
+        })      
+    }
+    
+    var maximized = $('div.game.playable')
+    if(maximized.length > 0) {
+      minimize(maximized, index)
+    }
+    maximize(game, index)
     set_info(game)
-    $('#go').show()
-    $('#info').show()
-    $('#go').data('identifier', game.identifier)
   }
   
   $('.new_game').click(function() {
@@ -65,15 +85,13 @@ $(function() {
     return false
   })
   
-  $('a.game').live('click', function() {
-    var id = $(this).text()
-    siili.get('/games/' + id, {}, function(game) {
-      display_game(game)
-    })
+  $('div.game a').live('click', function() {
+    var game = $(this).parents('div.game')
+    display_game(JSON.parse(game.attr('data-game').replace(/'/g, '"')), game.attr('data-index'))
     return false
   })
   
-  $('.field.empty').live('click', function() {
+  $('.playable .field.empty').live('click', function() {
     var id = $(this).attr('id').split('_')
     var params = { x: id[0], y: id[1], game: $('#go').data('identifier') }
     

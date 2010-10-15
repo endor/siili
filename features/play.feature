@@ -64,5 +64,3 @@ Feature: Play
       And I set a stone to "1_1"
     Then I should see white on "1_1"
       And I should not see black on "1_1"
-  
-  
