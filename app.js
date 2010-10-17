@@ -1,8 +1,14 @@
+require.paths.unshift('vendor/node-couchdb/lib');
+
 var express = require('express'),
   app = express.createServer(),
   sys = require('sys'),
-  UserService = require('./models/user').UserService,
-  GameService = require('./models/game').GameService,
+  couchdb = require('couchdb'),
+  couch_client,
+  db,
+  couch_views = require('./lib/couch_views'),
+  User = require('./models/user').User,
+  Game = require('./models/game').Game,
   Stone = require('./models/stone').Stone
 
 app.configure(function() {
@@ -11,10 +17,11 @@ app.configure(function() {
   app.use(express.logger())
   app.use(app.router)
   app.use(express.staticProvider(__dirname))
+  couch_client = couchdb.createClient(5984, 'localhost')
+  db = couch_client.db('siili')
+  app.db = User.db = Game.db = db
+  couch_views.update_views(db)
 })
-
-var User = new UserService(),
-  Game = new GameService()
 
 app.get('/', function(req, res) {
   res.sendfile(__dirname + '/public/index.html')
@@ -22,94 +29,97 @@ app.get('/', function(req, res) {
 
 app.post('/users', function(req, res) {
   var name = req.body.name,
-    password = req.body.password,
-    user = User.find_by_name(name)
-  
-  if(user) {
+    password = req.body.password
+    
+  User.find_by_name(name, function() {
     res.send('User already registered.', 403)
-  } else {
-    User.save({name: name, password: password})
-    res.contentType('json')
-    res.send(user, 200)
-  }
+  }, function() {
+    User.new_to_couchdb({ name: name, password: password }, function(user) {
+      send_result(res, user)      
+    }, function(err) {
+      send_error(res, err)
+    })
+  })
 })
 
 app.post('/sessions', function(req, res) {
   var name = req.body.name,
     password = req.body.password,
-    user = User.find_by_name(name)
-  
-  if(user && user.password == password) {
-    res.contentType('json')
-    res.send(user, 200)
-  } else {
-    res.send('Wrong user/password.', 403)
-  }
+    wrong_user_password = function() { send_error(res, 'Wrong user/password.', 403) }
+
+  User.find_by_name(name, function(user) {
+    if(user.password !== password) {
+      wrong_user_password()
+    } else {
+      send_result(res, user)
+    }
+  }, wrong_user_password)
 })
 
 app.post('/games', function(req, res) {
-  if(req.body.user) {
-    var user = User.find_by_identifier(req.body.user),
-      game = Game.save({board_size: req.body.board_size, white: user})
-
-    if(game && user) {
-      res.contentType('json')
-      res.send(game.prepare(user), 200)
-    }
-  }
+  var could_not_be_created = function() { send_error(res, 'Game could not be created.', 403) }
   
-  res.send('Game could not be created.', 403)
+  User.find(req.body.user, function(user) {
+    Game.new_to_couchdb({board_size: req.body.board_size, white: user}, function(game) {
+      send_result(res, Game.prepare(game, user))
+    }, function(err) {
+      send_error(res, err)
+    })
+  }, could_not_be_created)
 })
 
 app.put('/games/:id', function(req, res) {
-  if(req.body.user) {
-    var user = User.find_by_identifier(req.body.user),
-      game = Game.find_by_identifier(req.params.id)
-
-    if(game && user) {
-      if(game.participate(user)) {
-        res.contentType('json')
-        res.send(JSON.stringify(game.prepare(user)), 200)
-      } else {
-        res.send('You cannot join your own game.', 403)
-      }
-    }
-  }
+  var could_not_be_joined = function() { send_error(res, 'Game could not be joined.', 400) }
   
-  res.send('Game could not be joined.', 400)
+  User.find(req.body.user, function(user) {
+    Game.find(req.params.id, function(game) {
+      Game.participate(game, user, function(game) {
+        send_result(res, Game.prepare(game, user))        
+      }, function() {
+        send_error(res, 'You cannot join your own game.', 403)
+      })
+    }, could_not_be_joined)
+  }, could_not_be_joined)
 })
 
 app.get('/games', function(req, res) {
-  if(req.query.user) {
-    var user = User.find_by_identifier(req.query.user),
-      games = Game.find_all_by_user(user),
-      result = games || []
-    
-    res.send(JSON.stringify(result), 200)
-  }
+  User.find(req.query.user, function(user) {
+    Game.find_by_user(user, function(games) {
+      send_result(res, games.map(function(game) { return Game.prepare(game, user) }))
+    }, function() {
+      send_result(res, [])
+    })
+  })
 })
 
 app.post('/stones', function(req, res) {
-  var body = req.body
+  var body = req.body,
+    cannot_set_stone = function() { send_error(res, 'Cannot set stone.', 403) }
 
-  if(body.user) {
-    var user = User.find_by_identifier(body.user),
-      game = Game.find_by_identifier(body.game)
-    
-    if(game && user) {
+  User.find(body.user, function(user) {
+    Game.find(body.game, function(game) {
       var stone = new Stone({ game: game, user: user, x: parseInt(body.x, 10), y: parseInt(body.y, 10) }),
         errors = stone.validate()
       
       if(errors.length === 0) {
-        stone.set()
-        res.send(game.prepare(user), 200)
+        stone.set(db, function(game) {
+          send_result(res, Game.prepare(game, user))          
+        })
       } else {
-        res.send(errors[0], 403)
+        send_error(res, errors[0], 403)
       }
-    }    
-  }
-  
-  res.send('Cannot set stone.', 404)
+    }, cannot_set_stone)
+  }, cannot_set_stone)
 })
+
+function send_result(res, result) {
+  res.contentType('json')
+  res.send(result, 200)
+}
+
+function send_error(res, err, code) {
+  err = typeof err === "string" ? err : JSON.stringify(err)
+  res.send(err, code || 500)
+}
 
 app.listen(3000)

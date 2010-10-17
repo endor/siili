@@ -43,7 +43,7 @@ $(function() {
     }
     
     function maximize(game, index) {
-      var $game = $('div.game[data-identifier=\'' + game.identifier + '\']'),
+      var $game = $('div.game[data-identifier=\'' + game._id + '\']'),
         translateY = 180 - ((index % 5) * 100) + 'px',
         translateX = -350 -(Math.floor(index/5) * 100) + 'px'
       

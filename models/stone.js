@@ -16,20 +16,20 @@
     var errors = [], history = this.game.history
 
     if(this.game.board[this.x][this.y] !== 0) { errors.push("There's already a stone on this field.") }
-    if(history.length === 0 && this.user.identifier !== this.game.white.identifier) { errors.push("It's not your turn.") }
-    if(history.length > 0  && this.user.identifier === history[history.length - 1].identifier) { errors.push("It's not your turn.") }
+    if(history.length === 0 && this.user._id !== this.game.white._id) { errors.push("It's not your turn.") }
+    if(history.length > 0  && this.user._id === history[history.length - 1]._id) { errors.push("It's not your turn.") }
     if(!this.game.black || !this.game.white) { errors.push("There needs to be another player before the game can start.") }
     
     return errors
   }
 
-  Stone.prototype.set = function(options) {
-    var value = 1, color = 'white', stone = this
+  Stone.prototype.set = function(db, success) {
+    var value = 1, color = 'white', stone = this, game = this.game
 
-    if(this.user.identifier === this.game.black.identifier) { value = 2; color = 'black' }
+    if(this.user._id === game.black._id) { value = 2; color = 'black' }
 
-    this.game.board[this.x][this.y] = value
-    this.game.history.push({x: this.x, y: this.y, identifier: this.user.identifier, color: color})
+    game.board[this.x][this.y] = value
+    game.history.push({x: this.x, y: this.y, _id: this.user._id, color: color})
 
     this.directions.forEach(function(direction) {
       var _stone = stone[direction]()
@@ -37,6 +37,16 @@
         if(!stone.free(_stone, [])) {
           stone.destroy(color, _stone, [])
         }
+      }
+    })
+    
+    db.saveDoc(game._id, game, function(_err, ok) {
+      if(_err) {
+        console.log(_err)
+      } else {
+        game._id = ok.id
+        game._rev = ok.rev
+        success(game)
       }
     })
   };
@@ -80,7 +90,7 @@
     this.directions.forEach(function(direction) {
       var _stone = stone[direction]()
       if(!_stone) { return }
-      if(_stone.user && _stone.user.identifier === stone.user.identifier
+      if(_stone.user && _stone.user._id === stone.user._id
           && already_looked_up.indexOf(_stone.id) < 0) {
         free = free || stone.free(_stone, already_looked_up)
       } else if(_stone.game.board[_stone.x][_stone.y] === 0) {
@@ -99,7 +109,7 @@
 
       if(!_stone) { return }
 
-      if(_stone.user && _stone.user.identifier === stone.user.identifier
+      if(_stone.user && _stone.user._id === stone.user._id
           && already_destroyed.indexOf(_stone.id) < 0) {
         _stone.destroy(color, _stone, already_destroyed)
       }

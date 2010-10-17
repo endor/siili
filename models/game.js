@@ -1,79 +1,87 @@
 (function() {
-  GameService = function() {}
-  GameService.prototype.data = []
+  exports.Game = {
+    find: function(id, success, error) {
+      this.db.getDoc(id, function(err, result) {
+        if(err) { console.log(err); return }
 
-  GameService.prototype.build_id = function() {
-    return new Date().getTime()
-  }
+        if(result) {
+          success(result)
+        } else {
+          error()
+        }
+      })
+    },
+    
+    find_by_user: function(user, success, error) {
+      this.db.view('game', 'by_user_id', { startkey: user._id, endkey: user._id + "\u9999" }, function(err, result) {
+        if(err) { console.log(err); return }
 
-  GameService.prototype.build_board = function(board_size) {
-    var board = {}
+        if(result.rows.length > 0) {
+          success(result.rows.map(function(row) { return row.value }))
+        } else {
+          error()
+        }        
+      })
+    },
 
-    for(var i = 0; i < board_size; i += 1) {
-      board[i] = {}
-      for(var j = 0; j < board_size; j += 1) {
-        board[i][j] = 0
+    prepare: function(game, user) {
+      return {
+        board: game.board,
+        _id: game._id,
+        white: game.white.name,
+        prisoners_of_white: game.prisoners_of_white,
+        black: game.black ? game.black.name : null,
+        prisoners_of_black: game.prisoners_of_black
       }
-    }
-
-    return board
-  }
-
-  GameService.prototype.find_by_identifier = function(identifier) {
-    var result = null
-    for(var i = 0; i < this.data.length; i++) {
-      if(this.data[i]['identifier'] == identifier) {
-        result = this.data[i]
-        break
+    },
+    
+    participate: function(game, user, success, error) {
+      if(game.white._id == user._id) {
+        error()
+      } else {
+        game.black = user
+        this.db.saveDoc(game._id, game, function(_err, ok) {
+          if(_err) {
+            error()
+          } else {
+            game._id = ok.id
+            game._rev = ok.rev
+            success(game)
+          }
+        })
       }
-    }
-    return result
-  }
+    },
 
-  GameService.prototype.find_all_by_user = function(user) {
-    var result = []
-    for(var i = 0; i < this.data.length; i++) {
-      var game = this.data[i];
-      if((game.white && game.white.identifier == user.identifier) ||
-         (game.black && game.black.identifier == user.identifier)) {
-        result.push(GameService.prototype.prepare.call(game, user))
+    new_to_couchdb: (function() {
+      var build_board = function(board_size) {
+        var board = {}
+
+        for(var i = 0; i < board_size; i += 1) {
+          board[i] = {}
+          for(var j = 0; j < board_size; j += 1) {
+            board[i][j] = 0
+          }
+        }
+
+        return board
       }
-    }  
-    return result
+      
+      return function(game, success, error) {
+        game.board = build_board(game.board_size)
+        game.type = 'game'
+        game.history = []
+        game.prisoners_of_white = 0
+        game.prisoners_of_black = 0
+        this.db.saveDoc(game, function(_err, ok) {
+          if(_err) {
+            error(_err)
+          } else {
+            game._id = ok.id
+            game._rev = ok.rev
+            success(game)
+          }
+        })
+      }
+    })()
   }
-
-  GameService.prototype.participate = function(user) {
-    if(this.white.identifier == user.identifier) {
-      return false 
-    } else {
-      this.black = user
-      return true    
-    }
-  }
-
-  GameService.prototype.prepare = function(user) {
-    return {
-      board: this.board,
-      identifier: this.identifier,
-      white: this.white.name,
-      prisoners_of_white: this.prisoners_of_white,
-      black: this.black ? this.black.name : null,
-      prisoners_of_black: this.prisoners_of_black
-    }
-  }
-
-  GameService.prototype.save = function(game) {
-    game.board = this.build_board(game.board_size)
-    game.identifier = this.build_id()
-    game.participate = this.participate
-    game.prepare = this.prepare
-    game.history = []
-    game.prisoners_of_white = 0
-    game.prisoners_of_black = 0
-
-    this.data[this.data.length] = game
-    return game
-  }
-
-  exports.GameService = GameService  
 })()

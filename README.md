@@ -14,7 +14,6 @@ Start with `node app.js`.
 
 * Allow users to first confirm their move before actually submitting it || maybe see stone when hovering the field.
 * Calculate user's rank.
-* Use CouchDB as backend.
 * Count who has won at the end.
 * Allow users to pass.
 * Allow users to resign.

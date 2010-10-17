@@ -1,32 +1,29 @@
 (function() {
-  UserService = function() {}
-  UserService.prototype.data = []
-
-  var define_find_by = function(attribute) {
-    UserService.prototype['find_by_' + attribute] = function(attr) {
-      var result = null
-      for(var i = 0; i < this.data.length; i++) {
-        if(this.data[i][attribute] == attr) {
-          result = this.data[i]
-          break
+  exports.User = {
+    new_to_couchdb: function(user, success, error) {
+      user.type = 'user'
+      this.db.saveDoc(user, function(_err, ok) {
+        if(_err) {
+          error(_err)
+        } else {
+          user._id = ok.id
+          user._rev = ok.rev
+          success(user)
         }
-      }
-      return result    
-    }  
-  }
-  define_find_by('name')
-  define_find_by('identifier')
-
-  UserService.prototype.build_id = function() {
-    return new Date().getTime()
-  }
-
-  UserService.prototype.save = function(user) {
-    user.identifier = this.build_id()
-
-    this.data[this.data.length] = user
-    return true
-  }
-
-  exports.UserService = UserService
+      })
+    },
+    
+    find_by_name: function(name, success, error) {
+      this.db.view('user', 'by_name', { startkey: name, endkey: name + "\u9999", limit: 1 }, function(err, result) {
+        if(err) { console.log(err); return }
+        if(result.rows.length > 0) { success(result.rows[0].value) } else { error() }        
+      })
+    },
+    
+    find: function(id, success, error) {
+      this.db.getDoc(id, function(err, result) {
+        if(result) { success(result) } else { error() }
+      })
+    }
+  }  
 })()

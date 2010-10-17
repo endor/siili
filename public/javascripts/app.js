@@ -32,7 +32,7 @@ $(function() {
     
     siili.get('/games', {}, function(games) {
       $.each(games, function(index) {
-        var id = this.identifier,
+        var id = this._id,
           data = JSON.stringify(this).replace(/"/g, '\''),
           game_template = '' +
             '<div class="game" data-identifier="' + id + '" data-game="' + data + '" data-index="' + index + '">' +

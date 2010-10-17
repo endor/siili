@@ -1,16 +1,28 @@
 describe 'Stone'
   before_each
-    Game = new GameService(), User = new UserService()
-    
-    black = { identifier: '456' }
-    white = { identifier: '123' }
-    game = Game.save({board_size: 9, white: white, black: black})
+    black = { _id: '456' }
+    white = { _id: '123' }
+    game = {board_size: 9, white: white, black: black, history: [], prisoners_of_white: 0, prisoners_of_black: 0}
+    game.board = (function(board_size) {
+      var board = {}
+
+      for(var i = 0; i < board_size; i += 1) {
+        board[i] = {}
+        for(var j = 0; j < board_size; j += 1) {
+          board[i][j] = 0
+        }
+      }
+
+      return board
+    })(9)
+    db = {saveDoc: function() {}}
+    success = function() {}
   end
   
   describe 'validate'
     it 'should return an error if there\'s already a stone on the field'
       stone = new Stone({ game: game, user: white, x: 0, y: 0 })
-      stone.set()
+      stone.set(db, success)
       stone = new Stone({ game: game, user: black, x: 0, y: 0 })
       errors = stone.validate()
       errors[0].should.equal 'There\'s already a stone on this field.'
@@ -18,7 +30,7 @@ describe 'Stone'
     
     it 'should return an error if the same player tries to set again'
       stone = new Stone({ game: game, user: white, x: 0, y: 0 })
-      stone.set()
+      stone.set(db, success)
       stone = new Stone({ game: game, user: white, x: 0, y: 1 })
       errors = stone.validate()
       errors[0].should.equal 'It\'s not your turn.'
@@ -28,9 +40,9 @@ describe 'Stone'
   describe 'set'
     it 'should not remove undead enemy stones'
       stone = new Stone({ game: game, user: white, x: 0, y: 0 })
-      stone.set()
+      stone.set(db, success)
       stone = new Stone({ game: game, user: black, x: 0, y: 1 })
-      stone.set()
+      stone.set(db, success)
       game.board[0][0].should.equal 1
     end
   
@@ -48,7 +60,7 @@ describe 'Stone'
         { user: black, x: 1, y: 0 }
       ].forEach(function(move) {
         stone = new Stone({ game: game, user: move.user, x: move.x, y: move.y })
-        stone.set()
+        stone.set(db, success)
       });
       
       game.board[0][0].should.equal 0
@@ -78,7 +90,7 @@ describe 'Stone'
         { user: white, x: 2, y: 2 }
       ].forEach(function(move) {
         stone = new Stone({ game: game, user: move.user, x: move.x, y: move.y })
-        stone.set()
+        stone.set(db, success)
       })
       game.board[1][2].should.equal 0
       game.board[1][3].should.equal 0
@@ -123,7 +135,7 @@ describe 'Stone'
         { user: white, x: 2, y: 2 }
       ].forEach(function(move) {
         stone = new Stone({ game: game, user: move.user, x: move.x, y: move.y })
-        stone.set()
+        stone.set(db, success)
       })
       game.board[1][1].should.equal 0
       game.board[3][3].should.equal 0
