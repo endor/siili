@@ -13,11 +13,11 @@ Start with `node app.js`.
 ## TODO
 
 * Allow users to first confirm their move before actually submitting it || maybe see stone when hovering the field.
+* Mark games where it's my turn to move.
 * Calculate user's rank.
 * Count who has won at the end.
 * Allow users to pass.
 * Allow users to resign.
 * Push updates on her games to the user.
-* Allow for minifying the games into small boxes at the bottom.
 * Add komi.
 * Review games.

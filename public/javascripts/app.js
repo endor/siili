@@ -52,6 +52,9 @@ $(function() {
           
         game_div.css({
           '-webkit-transform': 'scale(0.2)',
+          '-o-transform': 'scale(0.2)',
+          '-moz-transform': 'scale(0.2)',
+          'transform': 'scale(0.2)',
           'left': left,
           'top': top
         })

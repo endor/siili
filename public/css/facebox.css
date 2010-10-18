@@ -9,10 +9,12 @@
   background: #FFF;
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
+  -o-border-radios: 6px;
   border-radius: 6px;
   border: 1px solid #999;
   -moz-box-shadow: 0px 0px 10px #888;
   -webkit-box-shadow: 0px 0px 10px #888;  
+  -o-box-shadow: 0px 0px 10px #888;  
   box-shadow: 0px 0px 10px #888;
 }
 

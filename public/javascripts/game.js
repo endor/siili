@@ -38,7 +38,10 @@ $(function() {
       maximized.
         removeClass('playable').
         css({
-          '-webkit-transform': 'scale(0.2) translateX(0px) translateY(0px)'
+          '-webkit-transform': 'scale(0.2) translateX(0px) translateY(0px)',
+          '-moz-transform': 'scale(0.2) translateX(0px) translateY(0px)',
+          '-o-transform': 'scale(0.2) translateX(0px) translateY(0px)',
+          'transform': 'scale(0.2) translateX(0px) translateY(0px)'
         })
     }
     
@@ -50,7 +53,10 @@ $(function() {
       $game.
         addClass('playable').
         css({
-          '-webkit-transform': 'scale(1) translateX(' + translateX + ') translateY(' + translateY + ')'
+          '-webkit-transform': 'scale(1) translateX(' + translateX + ') translateY(' + translateY + ')',
+          '-moz-transform': 'scale(1) translateX(' + translateX + ') translateY(' + translateY + ')',
+          '-o-transform': 'scale(1) translateX(' + translateX + ') translateY(' + translateY + ')',
+          'transform': 'scale(1) translateX(' + translateX + ') translateY(' + translateY + ')'
         })      
     }
     

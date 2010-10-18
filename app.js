@@ -23,6 +23,11 @@ app.configure(function() {
   couch_views.update_views(db)
 })
 
+app.put('/update_views', function(req, res) {
+  couch_views.update_views(db)
+  res.send(201)
+})
+
 app.get('/', function(req, res) {
   res.sendfile(__dirname + '/public/index.html')
 })
