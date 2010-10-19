@@ -25,13 +25,22 @@
     },
 
     prepare: function(game, user) {
+      var active = false
+      
+      if(game.history.length === 0) {
+        active = user._id === game.white._id
+      } else {
+        active = game.history[game.history.length - 1]._id !== user._id
+      }
+      
       return {
         board: game.board,
         _id: game._id,
         white: game.white.name,
         prisoners_of_white: game.prisoners_of_white,
         black: game.black ? game.black.name : null,
-        prisoners_of_black: game.prisoners_of_black
+        prisoners_of_black: game.prisoners_of_black,
+        active: active
       }
     },
     

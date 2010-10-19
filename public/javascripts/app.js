@@ -44,7 +44,8 @@ $(function() {
 
         $('body').append(game_template)
         var game_div = $('div.game[data-identifier=\'' + id + '\']')
-
+        if(this.active) { game_div.addClass('active') }
+        
         siili.build_board(this.board, game_div.find('div.board'))
         
         var left = (550 + Math.floor(index/5) * 100) + 'px',

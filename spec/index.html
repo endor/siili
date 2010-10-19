@@ -12,6 +12,7 @@
       function runSuites() {
         JSpec
         .exec('stone_spec.js')
+        .exec('game_spec.js')
         .run({failuresOnly : true})
         .report();
       }

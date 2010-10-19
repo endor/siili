@@ -71,13 +71,18 @@ h1 {
 }
 
 div.board {
-  width: 300px;
-  height: 300px;
-  padding: 0px;  
+  width: 298px;
+  height: 298px;
+  padding: 0px;
+  margin: 0px;
 }
 
 div.game {
   position: absolute;  
+}
+
+div.game p {
+  margin-left: 20px;
 }
 
 div.game.animate {
@@ -85,6 +90,14 @@ div.game.animate {
   -moz-transition: -moz-transform 0.7s linear;
   -o-transition: -o-transform 0.7s linear;
   transition: transform 0.7s linear;
+}
+
+div.game.active {
+  border: solid 8px #008B00;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
 }
 
 #info {

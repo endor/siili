@@ -106,9 +106,10 @@ $(function() {
     var params = { x: id[0], y: id[1], game: $('.game.playable').attr('data-identifier') }
     
     siili.post('/stones', params, function(game) {
-      var board_div = $('.game.playable .board')
-      board_div.html('')
-      siili.build_board(game.board, board_div)
+      var game_div = $('.game.playable')
+      game_div.removeClass('active')
+      game_div.find('.board').html('')
+      siili.build_board(game.board, game_div.find('.board'))
     }, siili.flash_error)
   })
 })

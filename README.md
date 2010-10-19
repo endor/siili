@@ -13,7 +13,6 @@ Start with `node app.js`.
 ## TODO
 
 * Allow users to first confirm their move before actually submitting it || maybe see stone when hovering the field.
-* Mark games where it's my turn to move.
 * Calculate user's rank.
 * Count who has won at the end.
 * Allow users to pass.
