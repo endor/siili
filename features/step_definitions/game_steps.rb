@@ -1,44 +1,49 @@
 Then /I should see "(\d)" games/ do |number|
-  $browser.ul(:id, 'games').html.split('<li').select{|li| li.match(/class="game"/)}.size.should == number.to_i
+  page.should have_css("div.game", :count => number.to_i)
 end
 
 Then /I should see an empty board/ do
-  fields = $browser.div(:id, 'go').html.split('div').select{|div| div.match(/class="field empty"/)}
-  fields.size.should == 81
+  page.should have_css(".board .field.empty", :count => 81)
 end
 
 Then /I should not see an empty board/ do
-  fields = $browser.div(:id, 'go').html.split('div').select{|div| div.match(/class="field empty"/)}
-  fields.size.should_not == 81
+  page.should_not have_css(".board .field.empty", :count => 81)
 end
 
 When /I fill in the game id/ do
-  $browser.text_field(:xpath, "//div[@id='facebox']//input[@class='game']").set @game_id
+  # TODO: for some odd reason selenium thinks this input is hidden and
+  #       so it doesn't fill in the game_id. why?
+  patiently do
+    find(:xpath, "//div[@id='facebox']//input[@class='game_id']").set @game_id
+  end
 end
 
 When /I press the join button/ do
-  $browser.button(:xpath, "//div[@id='facebox']//input[@class='join_game']").click
+  patiently do
+    find(:xpath, "//div[@id='facebox']//input[@class='join_game']").click
+  end
 end
 
-When /^I visit my first game$/ do
-  $browser.link(:xpath, "//a[@class='game']").click
-  When 'I wait for the AJAX call to finish'
+When /I visit my first game/ do
+  patiently do
+    find(:css, "div.game a").click
+  end
 end
 
 Given /"(\w+)" created a game/ do |user|
   When "I log in as \"#{user}/Test\""
     And 'I follow "New Game"'
-    And 'I wait for the AJAX call to finish'
-    # @game_id = $browser.h1(:text, /siili - \d+/).html.match(/siili - (\d+)/)[1]
+    patiently do
+      @game_id = find(:css, "div.playable p").text
+    end
     And 'I follow "Logout"'
 end
 
 Given /"(\w+)" joined that game/ do |user|
   When "I log in as \"#{user}/Test\""
-    And 'I follow "Join Game"'
-    And 'I fill in the game id'
-    And 'I press the join button'
-    And 'I follow "Logout"'
+  sleep 1
+  page.execute_script("$.ajax({ url: '/games/#{@game_id}', type: 'PUT', data: { user: siili.store.get('user') } })")
+  When 'I follow "Logout"'
 end
 
 When /"([^\"]+)" goes to the game/ do |user_password|

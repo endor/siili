@@ -83,7 +83,7 @@ $(function() {
   })
   
   $('input.join_game').live('click', function() {
-    var game_id = $('#facebox .game').val()
+    var game_id = $('#facebox .game_id').val()
     siili.put('/games/' + game_id, {}, function(game) {
       $(document).trigger('close.facebox')
       siili.display_games(function() {

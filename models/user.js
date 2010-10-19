@@ -21,6 +21,7 @@
     },
     
     find: function(id, success, error) {
+      error = error || function() {}
       this.db.getDoc(id, function(err, result) {
         if(result) { success(result) } else { error() }
       })
