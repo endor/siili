@@ -1,4 +1,8 @@
-$(function() {  
+$(function() {
+  siili.current_user = function() {
+    return siili.store.get('user')
+  }
+  
   var user_data = function(form) {
     return {
       name: $('#facebox .' + form + ' input.user').val(),

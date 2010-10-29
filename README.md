@@ -16,7 +16,10 @@ Start with `node app.js`.
 * Calculate user's rank.
 * Count who has won at the end.
 * Allow users to pass.
-* Allow users to resign.
 * Push updates on her games to the user.
 * Add komi.
 * Review games.
+
+## NOTE
+
+* Currently this implementation only works for browsers supporting css transitions.

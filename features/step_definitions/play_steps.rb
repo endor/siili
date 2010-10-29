@@ -7,5 +7,5 @@ Then /I should see (\w+) on "([^\"]+)"/ do |color, id|
 end
 
 Then /I should not see (\w+) on "([^\"]+)"/ do |color, id|
-  find(:css, "##{id}.field.#{color}").should be_nil
+  page.should_not have_css("##{id}.field.#{color}")
 end

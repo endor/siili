@@ -74,17 +74,21 @@ app.post('/games', function(req, res) {
 })
 
 app.put('/games/:id', function(req, res) {
-  var could_not_be_joined = function() { send_error(res, 'Game could not be joined.', 400) }
+  var user_or_game_not_found = function() { send_error(res, 'Cannot find user or game.', 400) }  
   
   User.find(req.body.user, function(user) {
     Game.find(req.params.id, function(game) {
-      Game.participate(game, user, function(game) {
-        send_result(res, Game.prepare(game, user))        
-      }, function() {
-        send_error(res, 'You cannot join your own game.', 403)
-      })
-    }, could_not_be_joined)
-  }, could_not_be_joined)
+      var send_game = function(game) { send_result(res, Game.prepare(game, user)) }
+      
+      if(req.body.action === 'join') {
+        Game.participate(game, user, send_game, function() {
+          send_error(res, 'You cannot join your own game.', 403)
+        })        
+      } else {
+        Game.resign(game, user, send_game)
+      }
+    }, user_or_game_not_found)
+  }, user_or_game_not_found)
 })
 
 app.get('/games', function(req, res) {

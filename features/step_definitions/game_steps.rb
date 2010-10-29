@@ -42,7 +42,7 @@ end
 Given /"(\w+)" joined that game/ do |user|
   When "I log in as \"#{user}/Test\""
   sleep 1
-  page.execute_script("$.ajax({ url: '/games/#{@game_id}', type: 'PUT', data: { user: siili.store.get('user') } })")
+  page.execute_script("$.ajax({ url: '/games/#{@game_id}', type: 'PUT', data: { action: 'join', user: siili.store.get('user') } })")
   When 'I follow "Logout"'
 end
 

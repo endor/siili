@@ -7,17 +7,39 @@ Feature: Game
     Given a clean database
 
   Scenario: create a new game
-    Given I am logged in as "Hans/Test"
+    Given I am logged in as "White/Test"
     When I follow "New Game"
     Then I should see "Players"
-      And I should see "Hans"
+      And I should see "White"
       And I should see an empty board
   
   Scenario: see index of games
-    Given a user "Klaus"
-      And a user "Hans"
-      And "Hans" created a game
-      And "Klaus" joined that game
-      And "Klaus" created a game
-    When I log in as "Klaus/Test"
+    Given a user "White"
+      And a user "Black"
+      And "Black" created a game
+      And "White" joined that game
+      And "White" created a game
+    When I log in as "White/Test"
     Then I should see "2" games
+    
+  Scenario: resign game
+    Given a user "White"
+      And a user "Black"
+      And "White" created a game
+      And "Black" joined that game
+    When I log in as "White/Test"
+      And I visit my first game
+      And I set a stone to "1_1"
+      And I follow "Logout"
+      And I log in as "Black/Test"
+      And I visit my first game
+      And I follow "Resign"
+    Then I should see "You resigned."
+    When I follow "Logout"
+      And I log in as "White/Test"
+      And I visit my first game
+    Then I should see "Black resigned."
+    When I follow "Logout"
+      And I log in as "Black/Test"
+      And I visit my first game
+    Then I should see "You resigned."  

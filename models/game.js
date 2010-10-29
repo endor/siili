@@ -1,4 +1,8 @@
 (function() {
+  var is_user_white = function(user, game) {
+    return user._id === game.white._id
+  }
+  
   exports.Game = {
     find: function(id, success, error) {
       this.db.getDoc(id, function(err, result) {
@@ -28,7 +32,7 @@
       var active = false
       
       if(game.history.length === 0) {
-        active = user._id === game.white._id
+        active = is_user_white(user, game) && game.black
       } else {
         active = game.history[game.history.length - 1]._id !== user._id
       }
@@ -40,12 +44,13 @@
         prisoners_of_white: game.prisoners_of_white,
         black: game.black ? game.black.name : null,
         prisoners_of_black: game.prisoners_of_black,
-        active: active
+        active: active,
+        resigned_by: game.resigned_by
       }
     },
     
     participate: function(game, user, success, error) {
-      if(game.white._id == user._id) {
+      if(is_user_white(user, game)) {
         error()
       } else {
         game.black = user
@@ -59,6 +64,22 @@
           }
         })
       }
+    },
+    
+    resign: function(game, user, success) {
+      game.resigned_by = {
+        user: user._id,
+        color: is_user_white(user, game) ? 'White' : 'Black'
+      }
+      this.db.saveDoc(game._id, game, function(_err, ok) {
+        if(_err) {
+          error()
+        } else {
+          game._id = ok.id
+          game._rev = ok.rev
+          success(game)
+        }        
+      })
     },
 
     new_to_couchdb: (function() {

@@ -27,15 +27,20 @@ $(function() {
   define_route('put')
   define_route('get')
   
+  siili.update_game_div_data_attributes = function(id, game) {
+    var game_div = $('div.game[data-identifier=\'' + id + '\']')
+    game_div.attr('data-game', JSON.stringify(game).replace(/"/g, '\''))
+    return game_div
+  }
+  
   siili.display_games = function(callback) {
     $('div.game').remove()
     
     siili.get('/games', {}, function(games) {
       $.each(games, function(index) {
         var id = this._id,
-          data = JSON.stringify(this).replace(/"/g, '\''),
           game_template = '' +
-            '<div class="game" data-identifier="' + id + '" data-game="' + data + '" data-index="' + index + '">' +
+            '<div class="game" data-identifier="' + id + '" data-game="" data-index="' + index + '">' +
               '<a href="#">' +
                 '<p>' + id + '</p>' + 
                 '<div class="board"></div>' +
@@ -43,8 +48,9 @@ $(function() {
             '</div>'
 
         $('body').append(game_template)
-        var game_div = $('div.game[data-identifier=\'' + id + '\']')
+        var game_div = siili.update_game_div_data_attributes(id, this)
         if(this.active) { game_div.addClass('active') }
+        if(this.resigned_by) { game_div.addClass('resigned') }
         
         siili.build_board(this.board, game_div.find('div.board'))
         

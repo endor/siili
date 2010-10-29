@@ -54,14 +54,20 @@ h1 {
   background-repeat: no-repeat;
 }
 
+#game_links {
+  position: absolute;
+  top: 415px;
+  left: 300px;
+  display: none;
+  list-style-type: none;
+}
+
 #games {
   position: absolute;
   top: 70px;
   left: 650px;
   height: 350px;
   padding: 0px;
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
 
 #games li {
@@ -71,14 +77,19 @@ h1 {
 }
 
 div.board {
-  width: 298px;
-  height: 298px;
+  width: 300px;
+  height: 300px;
   padding: 0px;
   margin: 0px;
 }
 
 div.game {
-  position: absolute;  
+  position: absolute;
+  border: solid 8px #AAAAAA;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
 }
 
 div.game p {
@@ -94,10 +105,10 @@ div.game.animate {
 
 div.game.active {
   border: solid 8px #008B00;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -o-border-radius: 10px;
-  border-radius: 10px;
+}
+
+div.game.resigned {
+  border: solid 8px #000000;
 }
 
 #info {
@@ -119,7 +130,7 @@ div.game.active {
   border: 0px;
 }
 
-.playable .field:hover {
+.active.playable:not(.resigned) .field:hover {
   background-image: url(../images/cross_hover.png);
 }
 
