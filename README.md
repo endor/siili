@@ -12,13 +12,15 @@ Start with `node app.js`.
 
 ## TODO
 
+* Allow users to pass.
 * Allow users to first confirm their move before actually submitting it || maybe see stone when hovering the field.
 * Calculate user's rank.
 * Count who has won at the end.
-* Allow users to pass.
-* Push updates on her games to the user.
+* Filter active, passive, resigned and ended games.
 * Add komi.
+* Add handicap depending on users' ranks.
 * Review games.
+* Push updates on her games to the user.
 
 ## NOTE
 
