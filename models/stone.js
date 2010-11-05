@@ -19,6 +19,7 @@
     if(history.length === 0 && this.user._id !== this.game.white._id) { errors.push("It's not your turn.") }
     if(history.length > 0  && this.user._id === history[history.length - 1]._id) { errors.push("It's not your turn.") }
     if(!this.game.black || !this.game.white) { errors.push("There needs to be another player before the game can start.") }
+    if(this.game.ended || this.game.resigned_by) { errors.push("The game already ended.") }
     
     return errors
   }

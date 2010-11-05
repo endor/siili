@@ -35,6 +35,20 @@ describe 'Stone'
       errors = stone.validate()
       errors[0].should.equal 'It\'s not your turn.'
     end
+    
+    it 'should return an error if the game ended'
+      game.ended = true
+      stone = new Stone({ game: game, user: white, x: 0, y: 0 })
+      errors = stone.validate()
+      errors[0].should.equal 'The game already ended.'
+    end
+    
+    it 'should return an error if the game was resigned'
+      game.resigned_by = { user: black }
+      stone = new Stone({ game: game, user: white, x: 0, y: 0 })
+      errors = stone.validate()
+      errors[0].should.equal 'The game already ended.'
+    end
   end
   
   describe 'set'

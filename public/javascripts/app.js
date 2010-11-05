@@ -50,7 +50,7 @@ $(function() {
         $('body').append(game_template)
         var game_div = siili.update_game_div_data_attributes(id, this)
         if(this.active) { game_div.addClass('active') }
-        if(this.resigned_by) { game_div.addClass('resigned') }
+        if(this.resigned_by || this.ended) { game_div.addClass('ended') }
         
         siili.build_board(this.board, game_div.find('div.board'))
         

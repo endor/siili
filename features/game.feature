@@ -42,4 +42,34 @@ Feature: Game
     When I follow "Logout"
       And I log in as "Black/Test"
       And I visit my first game
-    Then I should see "You resigned."  
+    Then I should see "You resigned."
+      And I should see that the current game has ended
+    
+  Scenario: end game by passing
+    Given a user "White"
+      And a user "Black"
+      And "White" created a game
+      And "Black" joined that game
+    When I log in as "White/Test"
+      And I visit my first game
+      And I follow "Pass"
+      And I follow "Logout"
+      And I log in as "Black/Test"
+      And I visit my first game
+    Then I should see "White passed."
+    When I set a stone to "1_1"
+      And I follow "Logout"
+      And I log in as "White/Test"
+      And I visit my first game
+      And I follow "Pass"
+      And I follow "Logout"
+      And I log in as "Black/Test"
+      And I visit my first game
+      And I follow "Pass"
+    Then I should see "Game ended."
+      And I should see that the current game has ended
+    When I follow "Logout"
+      And I log in as "White/Test"
+      And I visit my first game
+    Then I should see "Game ended."
+      And I should see that the current game has ended

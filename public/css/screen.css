@@ -107,7 +107,7 @@ div.game.active {
   border: solid 8px #008B00;
 }
 
-div.game.resigned {
+div.game.ended {
   border: solid 8px #000000;
 }
 
@@ -130,7 +130,7 @@ div.game.resigned {
   border: 0px;
 }
 
-.active.playable:not(.resigned) .field:hover {
+.active.playable:not(.ended) .field:hover {
   background-image: url(../images/cross_hover.png);
 }
 

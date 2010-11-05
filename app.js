@@ -78,14 +78,21 @@ app.put('/games/:id', function(req, res) {
   
   User.find(req.body.user, function(user) {
     Game.find(req.params.id, function(game) {
-      var send_game = function(game) { send_result(res, Game.prepare(game, user)) }
+      var send_game = function(game) { send_result(res, Game.prepare(game, user)) },
+        send_couch_error = function(err) { send_error(res, err, 403) }
       
-      if(req.body.action === 'join') {
-        Game.participate(game, user, send_game, function() {
-          send_error(res, 'You cannot join your own game.', 403)
-        })        
-      } else {
-        Game.resign(game, user, send_game)
+      switch(req.body.action) {
+        case 'join':
+          Game.participate(game, user, send_game, function() {
+            send_error(res, 'You cannot join your own game.', 403)
+          })
+          break
+        case 'resign':
+          Game.resign(game, user, send_game, send_couch_error)
+          break
+        case 'pass':
+          Game.pass(game, user, send_game, send_couch_error)
+          break
       }
     }, user_or_game_not_found)
   }, user_or_game_not_found)

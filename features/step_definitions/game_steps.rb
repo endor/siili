@@ -50,3 +50,7 @@ When /"([^\"]+)" goes to the game/ do |user_password|
   When "I log in as \"#{user_password}\""
   And 'I visit my first game'
 end
+
+Then /I should see that the current game has ended/ do
+  page.should have_css("div.game.ended")
+end
