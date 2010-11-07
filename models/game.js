@@ -54,15 +54,23 @@
         return message
       }
       
-      return function(game, user) {
-        var active = false
-
+      var is_active = function(game, user) {
         if(game.history.length === 0) {
-          active = is_user_white(user, game) && game.black
+          return !!(is_user_white(user, game) && game.black)
         } else {
-          active = game.history[game.history.length - 1]._id !== user._id
+          return game.history[game.history.length - 1]._id !== user._id
         }
-        
+      }
+      
+      var color = function(game, user) {
+        return is_user_white(user, game) ? 'white' : 'black'
+      }
+      
+      var opponent = function(game, user) {
+        return is_user_white(user, game) ? (game.black || {name: 'no opponent yet'}).name : game.white.name
+      }
+      
+      return function(game, user) {
         return {
           board: game.board,
           _id: game._id,
@@ -70,11 +78,13 @@
           prisoners_of_white: game.prisoners_of_white,
           black: game.black ? game.black.name : null,
           prisoners_of_black: game.prisoners_of_black,
-          active: !!active,
+          active: is_active(game, user),
           resigned_by: game.resigned_by,
           passed_by: game.passed_by,
           ended: game.ended,
-          message: message(game, user)
+          message: message(game, user),
+          color: color(game, user),
+          opponent: opponent(game, user)
         }
       }
     })(),

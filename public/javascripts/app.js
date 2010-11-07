@@ -39,8 +39,9 @@ $(function() {
     siili.get('/games', {}, function(games) {
       $.each(games, function(index) {
         var id = this._id,
+          color = this.color,
           game_template = '' +
-            '<div class="game" data-identifier="' + id + '" data-game="" data-index="' + index + '">' +
+            '<div class="game ' + color + '" data-identifier="' + id + '" data-game="" data-index="' + index + '">' +
               '<a href="#">' +
                 '<p>' + id + '</p>' + 
                 '<div class="board"></div>' +
@@ -56,7 +57,7 @@ $(function() {
         
         var left = (550 + Math.floor(index/5) * 100) + 'px',
           top = (-20 + ((index % 5) - 1) * 100) + 'px'
-          
+
         game_div.css({
           '-webkit-transform': 'scale(0.2)',
           '-o-transform': 'scale(0.2)',
@@ -68,6 +69,9 @@ $(function() {
         setTimeout(function(div) {
           div.addClass('animate')
         }, 100, game_div)
+        
+        game_div.before('<div class="opponent" data-identifier="' + id + '">' + this.opponent + '</div>')
+        $('div.opponent[data-identifier=\'' + id + '\']').css({'top': (parseInt(top, 10) + 130), 'left': (parseInt(left, 10) + 127)})
       })
       
       if(callback) {

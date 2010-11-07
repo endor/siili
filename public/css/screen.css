@@ -57,9 +57,14 @@ h1 {
 #game_links {
   position: absolute;
   top: 415px;
-  left: 300px;
+  left: 200px;
   display: none;
   list-style-type: none;
+}
+
+#game_links li {
+  display: inline-block;
+  margin-right: 10px;
 }
 
 #games {
@@ -81,6 +86,13 @@ div.board {
   height: 300px;
   padding: 0px;
   margin: 0px;
+}
+
+div.opponent {
+  position: absolute;
+  width: 300px;
+  color: black;
+  font-size: 11px;
 }
 
 div.game {
@@ -132,6 +144,14 @@ div.game.ended {
 
 .active.playable:not(.ended) .field:hover {
   background-image: url(../images/cross_hover.png);
+}
+
+.active.white.playable:not(.ended) .field:hover {
+  background-image: url(../images/white_hover.png);
+}
+
+.active.black.playable:not(.ended) .field:hover {
+  background-image: url(../images/black_hover.png);
 }
 
 .field.black {
@@ -190,4 +210,18 @@ form {
 }
 .login_form td, .register_form td {
   text-align: left;
+}
+
+.players {
+  list-style-type: none;
+  margin-left: 10px;
+  padding-left: 0px;
+}
+
+.players li {
+  margin-bottom: 5px;
+}
+
+.players li span {
+  font-weight: bold;
 }

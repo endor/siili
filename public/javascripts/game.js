@@ -29,12 +29,15 @@ $(function() {
     var info = $('#info'),
       html = '<h2>Players</h2>' +
         '<ul class="players">' +
-          '<li>' + game.white + ',<br />Prisoners: ' + game.prisoners_of_white + '</li>' +
+          '<li>' + 
+            '<span>' + game.white + '</span><br />' +
+            'Prisoners: ' + game.prisoners_of_white +
+          '</li>' +
         '</ul>'
 
     info.html(html).append(game.message || '')
     if(game.black) {
-      info.find('.players').append('<li>' + game.black + ',<br />Prisoners: ' + game.prisoners_of_black + '</li>')
+      info.find('.players').append('<li><span>' + game.black + '</span><br />Prisoners: ' + game.prisoners_of_black + '</li>')
     }
     info.show()      
   }
@@ -50,12 +53,14 @@ $(function() {
           '-moz-transform': 'scale(0.2) translateX(0px) translateY(0px)',
           '-o-transform': 'scale(0.2) translateX(0px) translateY(0px)',
           'transform': 'scale(0.2) translateX(0px) translateY(0px)'
-        })
+        }).
+        prev().show()
     }
 
     function maximize(game, index, callback) {
       callback = callback || function() {}
       var $game = $('div.game[data-identifier=\'' + game._id + '\']'),
+        $opponent = $('div.opponent[data-identifier=\'' + game._id + '\']'),
         translateY = 180 - ((index % 5) * 100) + 'px',
         translateX = -350 -(Math.floor(index/5) * 100) + 'px'
 
@@ -68,6 +73,7 @@ $(function() {
           '-o-transform': 'scale(1) translateX(' + translateX + ') translateY(' + translateY + ')',
           'transform': 'scale(1) translateX(' + translateX + ') translateY(' + translateY + ')'
         })
+      $opponent.hide()
 
       setTimeout(callback, 500)
     }
