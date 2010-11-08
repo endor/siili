@@ -73,3 +73,13 @@ Feature: Game
       And I visit my first game
     Then I should see "Game ended."
       And I should see that the current game has ended
+      
+  Scenario: see list of open games
+    Given a user "White"
+      And a user "Black"
+      And "Black" created a game
+      And "White" joined that game
+      And "Black" created a game
+    When I log in as "White/Test"
+      And I follow "Open Games"
+    Then I should see "1" open game

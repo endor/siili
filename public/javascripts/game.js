@@ -83,6 +83,7 @@ $(function() {
     }
     
     return function(game, index) {
+      $('#open_games').hide()
       var maximized = $('div.game.playable')
       
       if(maximized.length > 0) {
@@ -92,12 +93,40 @@ $(function() {
         })
       }
       
-      maximize(game, index, function() {
-        show_links(game)
-        set_info(game)
-      })
+      if(game) {
+        maximize(game, index, function() {
+          show_links(game)
+          set_info(game)
+        })        
+      }
     }
   })()  
+  
+  $('.open_games').click(function() {
+    display_game(null, null)
+    siili.get('/open_games', {}, function(games) {
+      var open_games = $('#open_games')
+      open_games.html('')
+      
+      games.forEach(function(game) {
+        open_games.append('' +
+          '<li class="open_game">' +
+            game.opponent +
+            '<span>' + game.size + 'x' + game.size + '</span>' +
+            '<br /><a href="#" class="join_open_game" data-identifier="' + game._id + '">join</a>' +
+          '</li>'
+        )
+      })
+      
+      open_games.show()
+      $('#info').hide()
+    })
+  })
+  
+  $('.join_open_game').live('click', function() {
+    join_game($(this).attr('data-identifier'), $(this))
+    return false
+  })
   
   $('.new_game').click(function() {
     siili.post('/games', {board_size: 9}, function(game) {
@@ -108,21 +137,24 @@ $(function() {
     return false
   })
   
-  $('a.join_game').live('click', function() {
+  $('.join_game').click(function() {
     $.facebox($('#join').html())
     return false
   })
   
-  $('input.join_game').live('click', function() {
-    var game_id = $('#facebox .game_id').val()
+  var join_game = function(game_id, form) {
     siili.put('/games/' + game_id, {action: 'join'}, function(game) {
       $(document).trigger('close.facebox')
       siili.display_games(function() {
         display_game(game, $('div.game').length - 1)
       })
     }, function(error) {
-      $('#facebox form').append('<div class="error">' + error.responseText + '</div>')
-    })
+      form.append('<div class="error">' + error.responseText + '</div>')
+    })    
+  }
+  
+  $('input.join_game').live('click', function() {
+    join_game($('#facebox .game_id').val(), $('#facebox form'))
     return false
   })
   

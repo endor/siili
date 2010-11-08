@@ -15,6 +15,18 @@
     })
   }
   
+  var handle_couch_results = function(success, error) {
+    return function(err, result) {
+      if(err) { console.log(err); return }
+
+      if(result.rows.length > 0) {
+        success(result.rows.map(function(row) { return row.value }))
+      } else {
+        error()
+      }
+    }
+  }
+  
   exports.Game = {
     find: function(id, success, error) {
       this.db.getDoc(id, function(err, result) {
@@ -28,16 +40,12 @@
       })
     },
     
+    find_open: function(user, success, error) {
+      this.db.view('game', 'open', {}, handle_couch_results(success, error))
+    },
+    
     find_by_user: function(user, success, error) {
-      this.db.view('game', 'by_user_id', { startkey: user._id, endkey: user._id + "\u9999" }, function(err, result) {
-        if(err) { console.log(err); return }
-
-        if(result.rows.length > 0) {
-          success(result.rows.map(function(row) { return row.value }))
-        } else {
-          error()
-        }        
-      })
+      this.db.view('game', 'by_user_id', { startkey: user._id, endkey: user._id + "\u9999" }, handle_couch_results(success, error))
     },
 
     prepare: (function() {
@@ -74,6 +82,7 @@
         return {
           board: game.board,
           _id: game._id,
+          size: game.board_size,
           white: game.white.name,
           prisoners_of_white: game.prisoners_of_white,
           black: game.black ? game.black.name : null,

@@ -20,7 +20,7 @@ body {
 nav {
   position: absolute;
   top: 0px;
-  left: 300px;
+  left: 220px;
   display: none;
 }
 
@@ -224,4 +224,24 @@ form {
 
 .players li span {
   font-weight: bold;
+}
+
+#open_games {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  list-style-type: none;
+}
+
+#open_games li {
+  display: block;
+  padding: 5px;
+  margin: 5px;
+  border: solid 1px #888888;
+  background-color: #F3F3F3;
+  width: 300px;
+}
+
+#open_games li span {
+  float: right;
 }

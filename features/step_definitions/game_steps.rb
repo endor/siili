@@ -2,6 +2,10 @@ Then /I should see "(\d)" games/ do |number|
   page.should have_css("div.game", :count => number.to_i)
 end
 
+Then /I should see "(\d)" open game/ do |number|
+  page.should have_css(".open_game", :count => number.to_i)
+end
+    
 Then /I should see an empty board/ do
   page.should have_css(".board .field.empty", :count => 81)
 end

@@ -98,15 +98,19 @@ app.put('/games/:id', function(req, res) {
   }, user_or_game_not_found)
 })
 
-app.get('/games', function(req, res) {
-  User.find(req.query.user, function(user) {
-    Game.find_by_user(user, function(games) {
-      send_result(res, games.map(function(game) { return Game.prepare(game, user) }))
-    }, function() {
-      send_result(res, [])
+var get_games = function(method) {
+  return function(req, res) {
+    User.find(req.query.user, function(user) {
+      Game[method](user, function(games) {
+        send_result(res, games.map(function(game) { return Game.prepare(game, user) }))
+      }, function() {
+        send_result(res, [])
+      })
     })
-  })
-})
+  }
+}
+app.get('/games', get_games('find_by_user'))
+app.get('/open_games', get_games('find_open'))
 
 app.post('/stones', function(req, res) {
   var body = req.body,
