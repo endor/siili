@@ -66,13 +66,11 @@ Feature: Game
       And I log in as "Black/Test"
       And I visit my first game
       And I follow "Pass"
-    Then I should see "Game ended."
-      And I should see that the current game has ended
+    Then I should see that the current game has ended
     When I follow "Logout"
       And I log in as "White/Test"
       And I visit my first game
-    Then I should see "Game ended."
-      And I should see that the current game has ended
+    Then I should see that the current game has ended
       
   Scenario: see list of open games
     Given a user "White"

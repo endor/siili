@@ -7,9 +7,9 @@ var express = require('express'),
   couch_client,
   db,
   couch_views = require('./lib/couch_views'),
+  Stone = require('./models/stone').Stone,
   User = require('./models/user').User,
-  Game = require('./models/game').Game,
-  Stone = require('./models/stone').Stone
+  Game = require('./models/game').Game
 
 app.configure(function() {
   app.use(express.methodOverride())
@@ -78,7 +78,7 @@ app.put('/games/:id', function(req, res) {
   
   User.find(req.body.user, function(user) {
     Game.find(req.params.id, function(game) {
-      var send_game = function(game) { send_result(res, Game.prepare(game, user)) },
+      var send_game = function(game) { console.log(Game.prepare(game, user)); send_result(res, Game.prepare(game, user)) },
         send_couch_error = function(err) { send_error(res, err, 403) }
       
       switch(req.body.action) {

@@ -8,7 +8,6 @@ require 'httparty'
 
 Capybara.app = nil
 Capybara.app_host = 'http://127.0.0.1:3000'
-# Capybara.javascript_driver = :selenium
 Capybara.default_driver = :selenium
 Capybara.register_driver :selenium do |app|
   Capybara::Driver::Selenium.new(app, :browser => :chrome)

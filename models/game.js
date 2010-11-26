@@ -27,6 +27,56 @@
     }
   }
   
+  var pass = function(game, user) {
+    game.passed_by = { user: user._id }
+    return game
+  }
+  
+  var end = function(game, user) {
+    game.ended = true
+    game.passed_by = null
+    if(!game.resigned_by) { game = count(game, user) }
+    return game
+  }
+  
+  var identify_territory = function(already_looked_up, result, stone) {
+    already_looked_up.push(stone.id)
+    result.count += 1
+    
+    stone.directions.forEach(function(direction) {
+      var _stone = stone[direction]()
+      if(!_stone || already_looked_up.indexOf(_stone.id) >= 0) { return }
+      if(_stone.value === 0) { identify_territory(already_looked_up, result, _stone) }
+      if(_stone.value !== 0) {
+        if(!result.owns) { result.owns = _stone.value }
+        if(result.owns !== _stone.value) { result.is_territory = false }
+      }
+    })
+    
+    return result
+  }
+
+  var count = function(game, user) {
+    var already_looked_up = []
+    game.result = { 1: 0, 2: 0 }
+    
+    for(var i = 0; i < game.board_size; i++) {
+      for(var j = 0; j < game.board_size; j++) {
+        var stone = new Stone({ game: game, user: user, x: i, y: j })
+        if(stone.value === 0 && already_looked_up.indexOf(stone.id) < 0) {
+          var territory = identify_territory(already_looked_up, { is_territory: true, count: 0 }, stone)
+          if(territory.is_territory) { game.result[territory.owns] += territory.count }
+        }
+      }
+    }
+
+    game.result.white = game.result[1]
+    game.result.black = game.result[2]
+    game.result.difference = Math.abs(game.result.white - game.result.black)
+    
+    return game
+  }
+  
   exports.Game = {
     find: function(id, success, error) {
       this.db.getDoc(id, function(err, result) {
@@ -53,11 +103,24 @@
         var message = null,
           opponent = is_user_white(user, game) ? game.black : game.white
         
-        if(game.passed_by && game.passed_by.user === user._id) { message = 'You passed.' }
-        if(game.passed_by && game.passed_by.user !== user._id) { message = opponent.name + ' passed.' }
-        if(game.ended) { message = 'Game ended.' }
-        if(game.resigned_by && game.resigned_by.user === user._id) { message = 'You resigned.' }
-        if(game.resigned_by && game.resigned_by.user !== user._id) { message = opponent.name + ' resigned.' }
+        if(game.passed_by) {
+          if(game.passed_by.user === user._id) { message = 'You passed.' }
+          if(game.passed_by.user !== user._id) { message = opponent.name + ' passed.' }          
+        }
+        if(game.resigned_by) {
+          if(game.resigned_by.user === user._id) { message = 'You resigned.' }
+          if(game.resigned_by.user !== user._id) { message = opponent.name + ' resigned.' }          
+        }
+        if(game.result) {
+          if((is_user_white(user, game) && game.result.white > game.result.black) ||
+              (!is_user_white(user, game) && game.result.black > game.result.white)) {
+            message = 'You have won by ' + game.result.difference.toFixed(1) + '.'
+          }
+          if((is_user_white(user, game) && game.result.white < game.result.black) ||
+              (!is_user_white(user, game) && game.result.black < game.result.white)) {
+            message = opponent.name + ' has won by ' + game.result.difference.toFixed(1) + '.'
+          }          
+        }
         
         return message
       }
@@ -93,7 +156,8 @@
           ended: game.ended,
           message: message(game, user),
           color: color(game, user),
-          opponent: opponent(game, user)
+          opponent: opponent(game, user),
+          result: game.result
         }
       }
     })(),
@@ -108,19 +172,17 @@
     },
     
     resign: function(game, user, success, error) {
-      game.passed_by = null
-      game.ended = true
       game.resigned_by = { user: user._id }
+      game = end(game, user)
       save_to_couch.call(this, game, success, error)
     },
 
     pass: function(game, user, success, error) {
       var color = is_user_white(user, game) ? 'white' : 'black'
       if(game.passed_by && game.passed_by.user !== user._id) {
-        game.ended = true
-        game.passed_by = null
+        game = end(game, user)
       } else {
-        game.passed_by = { user: user._id }
+        game = pass(game, user)
       }
       game.history.push({x: null, y: null, passed: true, _id: user._id, color: color})
       save_to_couch.call(this, game, success, error)

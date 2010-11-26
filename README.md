@@ -12,12 +12,13 @@ Start with `node app.js`.
 
 ## TODO
 
-* Calculate user's rank.
+* Part of the validation needs to move to a central place, because it needs to take place when passing and resigning, too.
 * Count who has won at the end.
 * Add dev, test and production environments.
 * Filter active, passive, resigned and ended games.
 * Add komi.
 * Add time limit.
+* Calculate user's rank.
 * Add handicap depending on users' ranks.
 * Review games.
 * Push updates on her games to the user.
@@ -27,6 +28,7 @@ Start with `node app.js`.
 * Better visuals: Messages must be clearer, the border of the board should be nicer, cleaner structure and footer.
 * Support different board sizes.
 * Sort open games.
+
 
 ## NOTE
 

@@ -81,7 +81,7 @@
 
     Stone.prototype.west = function() {
       return direction.call(this, function() { return this.x + 1 < this.game.board_size }, this.x + 1, this.y)
-    }  
+    }
   })()
 
   Stone.prototype.free = function(stone, already_looked_up) {
@@ -94,7 +94,7 @@
       if(_stone.user && _stone.user._id === stone.user._id
           && already_looked_up.indexOf(_stone.id) < 0) {
         free = free || stone.free(_stone, already_looked_up)
-      } else if(_stone.game.board[_stone.x][_stone.y] === 0) {
+      } else if(_stone.value === 0) {
         free = free || true
       }
     })
