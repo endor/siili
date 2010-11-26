@@ -53,25 +53,27 @@
       }
     })
     
+    result.already_looked_up = already_looked_up
     return result
   }
 
   var count = function(game, user) {
     var already_looked_up = []
     game.result = { 1: 0, 2: 0 }
-    
+
     for(var i = 0; i < game.board_size; i++) {
       for(var j = 0; j < game.board_size; j++) {
         var stone = new Stone({ game: game, user: user, x: i, y: j })
         if(stone.value === 0 && already_looked_up.indexOf(stone.id) < 0) {
           var territory = identify_territory(already_looked_up, { is_territory: true, count: 0 }, stone)
+          already_looked_up = territory.already_looked_up
           if(territory.is_territory) { game.result[territory.owns] += territory.count }
         }
       }
     }
 
-    game.result.white = game.result[1]
-    game.result.black = game.result[2]
+    game.result.white = game.result[1] + game.prisoners_of_white
+    game.result.black = game.result[2] + game.prisoners_of_black
     game.result.difference = Math.abs(game.result.white - game.result.black)
     
     return game
@@ -119,7 +121,10 @@
           if((is_user_white(user, game) && game.result.white < game.result.black) ||
               (!is_user_white(user, game) && game.result.black < game.result.white)) {
             message = opponent.name + ' has won by ' + game.result.difference.toFixed(1) + '.'
-          }          
+          }
+          if(game.result.difference === 0) {
+            message = "The game was even."
+          }
         }
         
         return message
