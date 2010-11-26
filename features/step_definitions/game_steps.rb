@@ -38,7 +38,7 @@ Given /"(\w+)" created a game/ do |user|
   When "I log in as \"#{user}/Test\""
     And 'I follow "New Game"'
     patiently do
-      @game_id = find(:css, "div.playable p").text
+      @game_id = find(:css, "div.playable").native.attribute('data-identifier')
     end
     And 'I follow "Logout"'
 end

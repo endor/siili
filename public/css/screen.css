@@ -1,14 +1,13 @@
 body {
-  background-color: #458B00;
   color: #666666;
 }
 
 #wrapper {
   position: absolute;
-  top: 5px;
+  top: 0px;
   bottom: 5px;
-  width: 600px;
-  left: 5px;
+  width: 100%;
+  left: 0px;
   padding: 10px;
   background-color: white;
   -moz-border-radius: 6px;
@@ -20,11 +19,15 @@ body {
 nav {
   position: absolute;
   top: 0px;
-  left: 220px;
+  left: 0px;
+  width: 100%;
+  border-bottom: solid 8px #008B00;
   display: none;
+  padding-top: 5px;
 }
 
 nav ul {
+  margin-left: 110px;
   list-style-type: none;
 }
 
@@ -33,10 +36,10 @@ nav ul li {
   margin-left: 10px;
 }
 
-footer {
+#created_by {
   position: absolute;
-  bottom: 0px;
-  left: 15px;
+  top: 5px;
+  right: 50px;
 }
 
 a {
@@ -56,8 +59,8 @@ h1 {
 
 #game_links {
   position: absolute;
-  top: 415px;
-  left: 200px;
+  top: 65px;
+  left: 175px;
   display: none;
   list-style-type: none;
 }
@@ -82,15 +85,15 @@ h1 {
 }
 
 div.board {
-  width: 300px;
-  height: 300px;
+  width: 189px;
+  height: 189px;
   padding: 0px;
   margin: 0px;
 }
 
 div.opponent {
   position: absolute;
-  width: 300px;
+  width: 189;
   color: black;
   font-size: 11px;
 }
@@ -125,16 +128,18 @@ div.game.ended {
 
 #info {
   position: absolute;
-  top: 70px;
+  top: 45px;
   left: 20px;
-  padding: 0px;
+  padding: 20px;
   margin: 0px;
+  width: 200px;
+  height: 100%;
 }
 
 .field {
-  width: 33.33px;
-  height: 33.33px;
-  background-image: url(../images/cross.png);
+  width: 21px;
+  height: 21px;
+  background-image: url(../images/cross2.png);
   display: block;
   float: left;
   margin: 0px;
@@ -143,23 +148,23 @@ div.game.ended {
 }
 
 .active.playable:not(.ended) .field:hover {
-  background-image: url(../images/cross_hover.png);
+  background-image: url(../images/cross_hover2.png);
 }
 
 .active.white.playable:not(.ended) .field:hover {
-  background-image: url(../images/white_hover.png);
+  background-image: url(../images/white_hover2.png);
 }
 
 .active.black.playable:not(.ended) .field:hover {
-  background-image: url(../images/black_hover.png);
+  background-image: url(../images/black_hover2.png);
 }
 
 .field.black {
-  background-image: url(../images/black.png);
+  background-image: url(../images/black2.png);
 }
 
 .field.white {
-  background-image: url(../images/white.png);
+  background-image: url(../images/white2.png);
 }
 
 form {

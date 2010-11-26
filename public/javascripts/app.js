@@ -43,7 +43,6 @@ $(function() {
           game_template = '' +
             '<div class="game ' + color + '" data-identifier="' + id + '" data-game="" data-index="' + index + '">' +
               '<a href="#">' +
-                '<p>' + id + '</p>' + 
                 '<div class="board"></div>' +
               '</a>' +
             '</div>'
@@ -55,14 +54,14 @@ $(function() {
         
         siili.build_board(this.board, game_div.find('div.board'))
         
-        var left = (550 + Math.floor(index/5) * 100) + 'px',
-          top = (-20 + ((index % 5) - 1) * 100) + 'px'
+        var left = (630 + Math.floor(index/5) * 120) + 'px',
+          top = (((index % 5) - 1) * 120) + 180 + 'px'
 
         game_div.css({
-          '-webkit-transform': 'scale(0.2)',
-          '-o-transform': 'scale(0.2)',
-          '-moz-transform': 'scale(0.2)',
-          'transform': 'scale(0.2)',
+          '-webkit-transform': 'scale(0.3)',
+          '-o-transform': 'scale(0.3)',
+          '-moz-transform': 'scale(0.3)',
+          'transform': 'scale(0.3)',
           'left': left,
           'top': top
         })
@@ -71,7 +70,7 @@ $(function() {
         }, 100, game_div)
         
         game_div.before('<div class="opponent" data-identifier="' + id + '">' + this.opponent + '</div>')
-        $('div.opponent[data-identifier=\'' + id + '\']').css({'top': (parseInt(top, 10) + 130), 'left': (parseInt(left, 10) + 127)})
+        $('div.opponent[data-identifier=\'' + id + '\']').css({'top': (parseInt(top, 10) + 55), 'left': (parseInt(left, 10) + 72)})
       })
       
       if(callback) {

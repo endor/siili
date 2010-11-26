@@ -49,10 +49,10 @@ $(function() {
       maximized.
         removeClass('playable').
         css({
-          '-webkit-transform': 'scale(0.2) translateX(0px) translateY(0px)',
-          '-moz-transform': 'scale(0.2) translateX(0px) translateY(0px)',
-          '-o-transform': 'scale(0.2) translateX(0px) translateY(0px)',
-          'transform': 'scale(0.2) translateX(0px) translateY(0px)'
+          '-webkit-transform': 'scale(0.3) translateX(0px) translateY(0px)',
+          '-moz-transform': 'scale(0.3) translateX(0px) translateY(0px)',
+          '-o-transform': 'scale(0.3) translateX(0px) translateY(0px)',
+          'transform': 'scale(0.3) translateX(0px) translateY(0px)'
         }).
         prev().show()
     }
@@ -61,8 +61,8 @@ $(function() {
       callback = callback || function() {}
       var $game = $('div.game[data-identifier=\'' + game._id + '\']'),
         $opponent = $('div.opponent[data-identifier=\'' + game._id + '\']'),
-        translateY = 180 - ((index % 5) * 100) + 'px',
-        translateX = -350 -(Math.floor(index/5) * 100) + 'px'
+        translateY = 55 - ((index % 5) * 120) + 'px',
+        translateX = -420 -(Math.floor(index/5) * 120) + 'px'
 
       $game.
         addClass('playable').

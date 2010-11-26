@@ -29,6 +29,7 @@ Feature: Play
       And I log in as "White/Test"
       And I visit my first game
     Then I should see black on "1_2"
+  
     
   Scenario: cannot set stone if there already is a stone
     Given "White" created a game
@@ -40,7 +41,8 @@ Feature: Play
       And I set a stone to "1_1"
     Then I should see white on "1_1"
       And I should not see black on "1_1"
-
+  
+  
   # | - - - - - - - - - |
   # |     w b           |
   # |     w b           |
@@ -78,3 +80,4 @@ Feature: Play
     When I follow "Logout"
       And "Black/Test" goes to the game
     Then I should see "You have won by 27.0"
+  
