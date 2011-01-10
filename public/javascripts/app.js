@@ -27,55 +27,27 @@ $(function() {
   define_route('put')
   define_route('get')
   
-  siili.update_game_div_data_attributes = function(id, game) {
-    var game_div = $('div.game[data-identifier=\'' + id + '\']')
-    game_div.attr('data-game', JSON.stringify(game).replace(/"/g, '\''))
-    return game_div
+  siili.update_game_data_attributes = function(id, game) {
+    var game_li = $('li.game[data-identifier=\'' + id + '\']')
+    game_li.attr('data-game', JSON.stringify(game).replace(/"/g, '\''))
+    return game_li
   }
   
   siili.display_games = function(callback) {
-    $('div.game').remove()
+    $('#games').html('')
     
     siili.get('/games', {}, function(games) {
-      $.each(games, function(index) {
-        var id = this._id,
-          color = this.color,
-          game_template = '' +
-            '<div class="game ' + color + '" data-identifier="' + id + '" data-game="" data-index="' + index + '">' +
-              '<a href="#">' +
-                '<div class="board"></div>' +
-              '</a>' +
-            '</div>'
+      games.forEach(function(game, index) {
+        $('#games').append('<li class="game ' + game.color + '" data-identifier="' + game._id + '" data-game="" data-index="' + index + '">' +
+          game._id.slice(-7) + ', opponent: ' + game.opponent +
+        '</li>')
 
-        $('body').append(game_template)
-        var game_div = siili.update_game_div_data_attributes(id, this)
-        if(this.active) { game_div.addClass('active') }
-        if(this.resigned_by || this.ended) { game_div.addClass('ended') }
-        
-        siili.build_board(this.board, game_div.find('div.board'))
-        
-        var left = (630 + Math.floor(index/5) * 120) + 'px',
-          top = (((index % 5) - 1) * 120) + 180 + 'px'
-
-        game_div.css({
-          '-webkit-transform': 'scale(0.3)',
-          '-o-transform': 'scale(0.3)',
-          '-moz-transform': 'scale(0.3)',
-          'transform': 'scale(0.3)',
-          'left': left,
-          'top': top
-        })
-        setTimeout(function(div) {
-          div.addClass('animate')
-        }, 100, game_div)
-        
-        game_div.before('<div class="opponent" data-identifier="' + id + '">' + this.opponent + '</div>')
-        $('div.opponent[data-identifier=\'' + id + '\']').css({'top': (parseInt(top, 10) + 55), 'left': (parseInt(left, 10) + 72)})
+        var game_list_item = siili.update_game_data_attributes(game._id, game)
+        if(game.active) { game_list_item.addClass('active') }
+        if(game.resigned_by || game.ended) { game_list_item.addClass('ended') }
       })
       
-      if(callback) {
-        callback()
-      }
+      if(callback) { callback() }
     }, siili.flash_error)
   }
 

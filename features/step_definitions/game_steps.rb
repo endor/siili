@@ -1,5 +1,5 @@
 Then /I should see "(\d)" games/ do |number|
-  page.should have_css("div.game", :count => number.to_i)
+  page.should have_css("li.game", :count => number.to_i)
 end
 
 Then /I should see "(\d)" open game/ do |number|
@@ -7,11 +7,11 @@ Then /I should see "(\d)" open game/ do |number|
 end
     
 Then /I should see an empty board/ do
-  page.should have_css(".board .field.empty", :count => 81)
+  page.should have_css("#current_game .field.empty", :count => 81)
 end
 
 Then /I should not see an empty board/ do
-  page.should_not have_css(".board .field.empty", :count => 81)
+  page.should_not have_css("#current_game .field.empty", :count => 81)
 end
 
 When /I fill in the game id/ do
@@ -30,7 +30,7 @@ end
 
 When /I visit my first game/ do
   patiently do
-    find(:css, "div.game a").click
+    find(:css, "li.game:first").click
   end
 end
 
@@ -38,7 +38,7 @@ Given /"(\w+)" created a game/ do |user|
   When "I log in as \"#{user}/Test\""
     And 'I follow "New Game"'
     patiently do
-      @game_id = find(:css, "div.playable").native.attribute('data-identifier')
+      @game_id = find(:css, "li.game:first").native.attribute('data-identifier')
     end
     And 'I follow "Logout"'
 end
@@ -56,5 +56,5 @@ When /"([^\"]+)" goes to the game/ do |user_password|
 end
 
 Then /I should see that the current game has ended/ do
-  page.should have_css("div.game.ended")
+  page.should have_css("li.game.ended")
 end

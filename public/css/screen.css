@@ -70,18 +70,53 @@ h1 {
   margin-right: 10px;
 }
 
+#current_game {
+  width: 189px;
+  position: absolute;
+  top: 120px;
+  left: 170px;
+}
+
 #games {
   position: absolute;
   top: 70px;
-  left: 650px;
+  right: 70px;
+  width: 300px;
   height: 350px;
   padding: 0px;
 }
 
 #games li {
+  width: 100%;
+  padding: 5px;
   display: inline-block;
-  margin-bottom: 15px;
-  height: 100px;
+  height: 40px;
+  border: solid 4px #AAAAAA;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+#games li.animate {
+  -webkit-transition: -webkit-transform 0.7s linear;
+  -moz-transition: -moz-transform 0.7s linear;
+  -o-transition: -o-transform 0.7s linear;
+  transition: transform 0.7s linear;
+}
+
+#games li.active {
+  border-color: #008B00;
+}
+
+#games li.ended {
+  border-color: #000000;
+}
+
+#games li.active.current {
+  background-color: rgba(0, 139, 0, 0.2);
+}
+
+#games li.current {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 div.board {
@@ -98,33 +133,7 @@ div.opponent {
   font-size: 11px;
 }
 
-div.game {
-  position: absolute;
-  border: solid 8px #AAAAAA;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -o-border-radius: 10px;
-  border-radius: 10px;
-}
 
-div.game p {
-  margin-left: 20px;
-}
-
-div.game.animate {
-  -webkit-transition: -webkit-transform 0.7s linear;
-  -moz-transition: -moz-transform 0.7s linear;
-  -o-transition: -o-transform 0.7s linear;
-  transition: transform 0.7s linear;
-}
-
-div.game.active {
-  border: solid 8px #008B00;
-}
-
-div.game.ended {
-  border: solid 8px #000000;
-}
 
 #info {
   position: absolute;
@@ -132,7 +141,7 @@ div.game.ended {
   left: 20px;
   padding: 20px;
   margin: 0px;
-  width: 200px;
+  width: 100px;
   height: 100%;
 }
 
@@ -147,23 +156,23 @@ div.game.ended {
   border: 0px;
 }
 
-.active.playable:not(.ended) .field:hover {
+#current_game.playable .field.empty:hover {
   background-image: url(../images/cross_hover2.png);
 }
 
-.active.white.playable:not(.ended) .field:hover {
+#current_game.playable.white .field.empty:hover {
   background-image: url(../images/white_hover2.png);
 }
 
-.active.black.playable:not(.ended) .field:hover {
+#current_game.playable.black .field.empty:hover {
   background-image: url(../images/black_hover2.png);
 }
 
-.field.black {
+#current_game .field.black {
   background-image: url(../images/black2.png);
 }
 
-.field.white {
+#current_game .field.white {
   background-image: url(../images/white2.png);
 }
 
@@ -229,6 +238,10 @@ form {
 
 .players li span {
   font-weight: bold;
+}
+
+.players .me {
+  color: #008B00;
 }
 
 #open_games {

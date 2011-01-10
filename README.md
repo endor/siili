@@ -12,8 +12,8 @@ Start with `node app.js`.
 
 ## TODO
 
-* Part of the validation needs to move to a central place, because it needs to take place when passing and resigning, too.
-* Count who has won at the end.
+* Mark dead stones when counting at the end of the game on the client side.
+* Support different board sizes.
 * Add dev, test and production environments.
 * Filter active, passive, resigned and ended games.
 * Add komi.
@@ -26,8 +26,8 @@ Start with `node app.js`.
 * Export sgf.
 * Import sgf.
 * Better visuals: Messages must be clearer, the border of the board should be nicer, cleaner structure and footer.
-* Support different board sizes.
 * Sort open games.
+* Part of the validation needs to move to a central place, because it needs to take place when passing and resigning, too.
 
 
 ## NOTE

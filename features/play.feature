@@ -43,15 +43,17 @@ Feature: Play
       And I should not see black on "1_1"
   
   
-  # | - - - - - - - - - |
-  # |     w b           |
-  # |     w b           |
-  # |     w b           |
-  # |     w b           |
-  # |     w b           |
-  # |     w b           |
-  # |     w b           |
-  # | - - - - - - - - - |
+  # | -  -  -  -  -  -  -  -  - |
+  # |       w  b                |
+  # |       w  b                |
+  # |       w  b                |
+  # |       w  b                |
+  # |       w  b                |
+  # |       w  b                |
+  # |       w  b                |
+  # |       w  b                |
+  # |       w  b                |
+  # | -  -  -  -  -  -  -  -  - |
   Scenario: japanese counting for clean areas
     Given "White" created a game
       And "Black" joined that game
@@ -80,4 +82,53 @@ Feature: Play
     When I follow "Logout"
       And "Black/Test" goes to the game
     Then I should see "You have won by 27.0"
+  
+  
+  # | -  -  -  -  -  -  -  -  - |
+  # |    b  w     w  b          |
+  # | b  w        w  b          |
+  # | w           w  b          |
+  # |             w  b          |
+  # |             w  b          |
+  # |             w  b          |
+  # |             w  b          |
+  # |             w  b          |
+  # |             w  b          |
+  # | -  -  -  -  -  -  -  -  - |
+  # the two black stones will have to be
+  # marked as dead by the player
+  Scenario: marking dead stones at the end of the game
+    Given "White" created a game
+      And "Black" joined that game
+    When "White" sets a stone to "0_4"
+      And "Black" sets a stone to "0_5"
+      And "White" sets a stone to "1_4"
+      And "Black" sets a stone to "1_5"
+      And "White" sets a stone to "2_4"
+      And "Black" sets a stone to "2_5"
+      And "White" sets a stone to "3_4"
+      And "Black" sets a stone to "3_5"
+      And "White" sets a stone to "4_4"
+      And "Black" sets a stone to "4_5"
+      And "White" sets a stone to "5_4"
+      And "Black" sets a stone to "5_5"
+      And "White" sets a stone to "6_4"
+      And "Black" sets a stone to "6_5"
+      And "White" sets a stone to "7_4"
+      And "Black" sets a stone to "7_5"
+      And "White" sets a stone to "8_4"
+      And "Black" sets a stone to "8_5"
+      And "White" sets a stone to "0_2"
+      And "Black" sets a stone to "0_1"
+      And "White" sets a stone to "1_1"
+      And "Black" sets a stone to "1_0"
+      And "White" sets a stone to "2_0"
+      And "Black" passes
+      And "White" passes
+      And "Black/Test" goes to the game
+      And "Black" marks "0_1" as dead
+    Then I should see "White has won by 8.0"
+    When I follow "Logout"
+      And "White/Test" goes to the game
+    Then I should see "You have won by 8.0"
   

@@ -9,8 +9,8 @@ Feature: Game
   Scenario: create a new game
     Given I am logged in as "White/Test"
     When I follow "New Game"
-    Then I should see "Players"
-      And I should see "White"
+      And I visit my first game
+    Then I should see "White"
       And I should see an empty board
   
   Scenario: see index of games
@@ -21,7 +21,7 @@ Feature: Game
       And "White" created a game
     When I log in as "White/Test"
     Then I should see "2" games
-    
+
   Scenario: resign game
     Given a user "White"
       And a user "Black"
@@ -44,7 +44,7 @@ Feature: Game
       And I visit my first game
     Then I should see "You resigned."
       And I should see that the current game has ended
-    
+
   Scenario: end game by passing
     Given a user "White"
       And a user "Black"

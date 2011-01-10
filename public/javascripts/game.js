@@ -27,9 +27,8 @@ $(function() {
   
   var set_info = function(game) {
     var info = $('#info'),
-      html = '<h2>Players</h2>' +
-        '<ul class="players">' +
-          '<li>' + 
+      html = '<ul class="players">' +
+          '<li class="white">' + 
             '<span>' + game.white + '</span><br />' +
             'Prisoners: ' + game.prisoners_of_white +
           '</li>' +
@@ -37,70 +36,31 @@ $(function() {
 
     info.html(html).append(game.message || '')
     if(game.black) {
-      info.find('.players').append('<li><span>' + game.black + '</span><br />Prisoners: ' + game.prisoners_of_black + '</li>')
+      info.find('.players').append('<li class="black"><span>' + game.black + '</span><br />Prisoners: ' + game.prisoners_of_black + '</li>')
     }
+    info.find('.' + game.color).addClass('me')
     info.show()      
   }
   
-  var display_game = (function() {
-    function minimize(maximized, index, callback) {
-      if(callback) { callback() }
+  var display_game = function(game, index) {
+    $('#open_games').hide()
 
-      maximized.
-        removeClass('playable').
-        css({
-          '-webkit-transform': 'scale(0.3) translateX(0px) translateY(0px)',
-          '-moz-transform': 'scale(0.3) translateX(0px) translateY(0px)',
-          '-o-transform': 'scale(0.3) translateX(0px) translateY(0px)',
-          'transform': 'scale(0.3) translateX(0px) translateY(0px)'
-        }).
-        prev().show()
-    }
-
-    function maximize(game, index, callback) {
-      callback = callback || function() {}
-      var $game = $('div.game[data-identifier=\'' + game._id + '\']'),
-        $opponent = $('div.opponent[data-identifier=\'' + game._id + '\']'),
-        translateY = 55 - ((index % 5) * 120) + 'px',
-        translateX = -420 -(Math.floor(index/5) * 120) + 'px'
-
-      $game.
-        addClass('playable').
-        one('webkitTransitionEnd transitionend oTransitionEnd', callback).
-        css({
-          '-webkit-transform': 'scale(1) translateX(' + translateX + ') translateY(' + translateY + ')',
-          '-moz-transform': 'scale(1) translateX(' + translateX + ') translateY(' + translateY + ')',
-          '-o-transform': 'scale(1) translateX(' + translateX + ') translateY(' + translateY + ')',
-          'transform': 'scale(1) translateX(' + translateX + ') translateY(' + translateY + ')'
-        })
-      $opponent.hide()
-
-      setTimeout(callback, 500)
-    }
-
-    function show_links(game) {
-      if(game.active) { $('#game_links').show() }
-    }
+    var current_game = $('#current_game')
+    current_game.html('')
+    $('.game').removeClass('current')
     
-    return function(game, index) {
-      $('#open_games').hide()
-      var maximized = $('div.game.playable')
-      
-      if(maximized.length > 0) {
-        minimize(maximized, index, function() {
-          $('#game_links').hide()
-          $('#info').hide()
-        })
-      }
-      
-      if(game) {
-        maximize(game, index, function() {
-          show_links(game)
-          set_info(game)
-        })        
+    if(game) {
+      $('.game[data-identifier="' + game._id + '"]').addClass('current')
+      siili.build_board(game.board, current_game)
+      set_info(game)
+      if(game.active) {
+        $('#game_links').show()
+        $('#current_game').
+          addClass('playable ' + game.color).
+          data('identifier', game._id)
       }
     }
-  })()  
+  }
   
   $('.open_games').click(function() {
     display_game(null, null)
@@ -130,9 +90,7 @@ $(function() {
   
   $('.new_game').click(function() {
     siili.post('/games', {board_size: 9}, function(game) {
-      siili.display_games(function() {
-        display_game(game, $('div.game').length - 1)
-      })
+      siili.display_games()
     }, siili.flash_error)
     return false
   })
@@ -158,21 +116,24 @@ $(function() {
     return false
   })
   
-  $('div.game:not(.playable) a').live('click', function() {
-    var game_div = $(this).parents('div.game')
-    display_game(JSON.parse(game_div.attr('data-game').replace(/'/g, '"')), game_div.attr('data-index'))
-    return false
+  $('.game').live('click', function() {
+    var game = JSON.parse($(this).attr('data-game').replace(/'/g, '"'))
+    display_game(game)
   })
   
-  $('.active.playable:not(.ended) .field.empty').live('click', function(evt) {
+  $('#current_game.playable .field.empty').live('click', function(evt) {
     var id = $(this).attr('id').split('_'),
-      params = { x: id[0], y: id[1], game: $('.game.playable').attr('data-identifier') }
+      params = { x: id[0], y: id[1], game: $('#current_game').data('identifier') },
+      current_game = $('#current_game'),
+      game_li = $('.game[data-identifier="' + id + '"]')
     
     siili.post('/stones', params, function(game) {
-      var game_div = $('.game.playable')
-      game_div.removeClass('active')
-      game_div.find('.board').html('')
-      siili.build_board(game.board, game_div.find('.board'))
+      current_game.
+        removeClass().
+        html('')
+      $('#game_links').hide()
+      game_li.removeClass('active')
+      siili.build_board(game.board, current_game)
     }, siili.flash_error)
     
     return false
@@ -180,16 +141,18 @@ $(function() {
   
   var game_link_callback = function(action) {
     return function() {
-      var game_div = $('.game.playable'),
-        id = game_div.attr('data-identifier')
+      var current_game = $('#current_game'),
+        id = current_game.data('identifier'),
+        game_li = $('.game[data-identifier="' + id + '"]')
 
       siili.put('/games/' + id,
         { action: action },
         function(game) {
           set_info(game)
-          game_div.removeClass('active')
-          if(game.ended) { game_div.addClass('ended') }
-          siili.update_game_div_data_attributes(id, game)
+          current_game.removeClass('playable')
+          game_li.removeClass('active')
+          if(game.ended) { game_li.addClass('ended') }          
+          siili.update_game_data_attributes(id, game)
         },
         siili.flash_error)
 

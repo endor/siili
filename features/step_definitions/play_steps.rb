@@ -16,6 +16,13 @@ When /"([^\"]+)" passes/ do |user|
   And %Q{I follow "Logout"}  
 end
 
+When /"([^\"]+)" marks "([^\"]+)" as dead/ do |user, id|
+  When %Q{I log in as "#{user}/Test"}
+  And %Q{I visit my first game}
+  find(:xpath, "//div[@id='#{id}']").click
+  And %Q{I follow "Logout"}
+end
+
 Then /I should see (\w+) on "([^\"]+)"/ do |color, id|
   find(:css, "##{id}.field.#{color}").should_not be_nil
 end
