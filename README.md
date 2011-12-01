@@ -4,6 +4,10 @@ A go client/server written in [jquery](http://jquery.com) and [expressjs](http:/
 
 By Frank Prößdorf <fp@notjusthosting.com>.
 
+## Libraries
+
+* express 2.x
+* couchdb
 
 ## Usage
 
