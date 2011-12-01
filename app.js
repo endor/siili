@@ -13,10 +13,10 @@ var express = require('express'),
 
 app.configure(function() {
   app.use(express.methodOverride())
-  app.use(express.bodyDecoder())
+  app.use(express.bodyParser())
   app.use(express.logger())
   app.use(app.router)
-  app.use(express.staticProvider(__dirname))
+  app.use(express.static(__dirname))
   couch_client = couchdb.createClient(5984, 'localhost')
   db = couch_client.db('siili')
   app.db = User.db = Game.db = db
